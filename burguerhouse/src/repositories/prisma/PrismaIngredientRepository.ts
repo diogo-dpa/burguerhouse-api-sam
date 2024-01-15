@@ -1,8 +1,8 @@
 import { Ingredients, Prisma } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
-import { IPrismaIngredientsRepository } from '../../irepositories/prisma/IPrismaIngredientsRepository';
+import { IPrismaIngredientRepository } from '../../irepositories/prisma/IPrismaIngredientRepository';
 
-export class PrismaIngredientsRepository implements IPrismaIngredientsRepository {
+export class PrismaIngredientRepository implements IPrismaIngredientRepository {
     async getAll(): Promise<Ingredients[]> {
         return await prisma.ingredients.findMany();
     }

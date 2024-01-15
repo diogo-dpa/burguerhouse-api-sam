@@ -1,6 +1,6 @@
 import { Prisma, Ingredients } from '@prisma/client';
 
-export interface IPrismaIngredientsRepository {
+export interface IPrismaIngredientRepository {
     getAll: () => Promise<Ingredients[]>;
     getById: (id: string) => Promise<Ingredients | null>;
     update: (id: string, updateData: Prisma.IngredientsUpdateInput) => Promise<Ingredients>;
