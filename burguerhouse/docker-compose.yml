@@ -4,6 +4,7 @@ version: "3.1"
 services:
   db:
     image: postgres
+    container_name: burguerhouse-db
     restart: always
     environment:
       POSTGRES_PASSWORD: senha123
@@ -13,9 +14,20 @@ services:
       POSTGRES_PORT: 5432
     ports:
       - "5432:5432"
+    networks:
+      - burguerhouse
   
   adminer:
     image: adminer
+    container_name: burguerhouse-db-management
     restart: always
     ports:
       - 8080:8080
+    networks:
+      - burguerhouse
+
+networks:
+  burguerhouse:
+    name: burguerhouse
+    driver: bridge
+
