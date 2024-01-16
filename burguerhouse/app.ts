@@ -28,9 +28,11 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         const userController = new UserController(userService);
         console.log(JSON.stringify(event));
 
+        const formattedBody = event.body ? JSON.parse(event.body) : '';
+        const idParameter = event.pathParameters?.id ?? '';
         switch (event.httpMethod) {
             case 'POST':
-                const resultPost = await userController.create(event.body);
+                const resultPost = await userController.create(formattedBody);
                 return {
                     statusCode: 200,
                     body: JSON.stringify({
@@ -38,15 +40,25 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
                     }),
                 };
             case 'GET':
-                const resultGet = await userController.getAll();
-                return {
-                    statusCode: 200,
-                    body: JSON.stringify({
-                        data: resultGet,
-                    }),
-                };
-            case 'UPDATE':
-                const resultPut = await userController.update(event.path, event.body);
+                if (idParameter) {
+                    const resultGet = await userController.getById(idParameter);
+                    return {
+                        statusCode: 200,
+                        body: JSON.stringify({
+                            data: resultGet,
+                        }),
+                    };
+                } else {
+                    const resultGet = await userController.getAll();
+                    return {
+                        statusCode: 200,
+                        body: JSON.stringify({
+                            data: resultGet,
+                        }),
+                    };
+                }
+            case 'PUT':
+                const resultPut = await userController.update(idParameter, formattedBody);
                 return {
                     statusCode: 200,
                     body: JSON.stringify({
@@ -54,7 +66,7 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
                     }),
                 };
             case 'DELETE':
-                await userController.delete(event.path);
+                await userController.delete(idParameter);
                 return {
                     statusCode: 200,
                     body: JSON.stringify({
