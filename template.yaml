@@ -11,7 +11,7 @@ Globals:
     Timeout: 3
 
 Resources:
-  HelloWorldFunction:
+  UsersFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: burguerhouse/
@@ -20,11 +20,31 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        HelloWorld:
+        GetAllUsers:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /hello
+            Path: /users
             Method: get
+        GetUserById:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /users/{id}
+            Method: get
+        CreateUser:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /users
+            Method: post
+        UpdateUser:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /users/{id}
+            Method: put
+        DeleteUser:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /users/{id}
+            Method: delete
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -33,6 +53,10 @@ Resources:
         Sourcemap: true
         EntryPoints: 
         - app.ts
+        Loader:
+        - .prisma=file
+        - .so.node=file
+        AssetNames: '[name]'
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
