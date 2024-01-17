@@ -1,6 +1,7 @@
 import { IUserController } from '../icontrollers/IUserController';
 import { UserModel } from '../models/user/UserModel';
 import { UserService } from '../services/UserService';
+import { ErrorHandler } from '../utils/ErrorHandler';
 
 export class UserController implements IUserController {
     private userService: UserService;
@@ -20,6 +21,8 @@ export class UserController implements IUserController {
 
     async getById(id: string): Promise<UserModel | null> {
         try {
+            ErrorHandler.validateStringParameter(id);
+
             const user = await this.userService.getUserById(id);
             return user;
         } catch (error: any) {
@@ -27,18 +30,37 @@ export class UserController implements IUserController {
         }
     }
 
-    async update(id: string, body: any): Promise<UserModel> {
+    async update(id: string, body: string): Promise<UserModel> {
         try {
-            const user = await this.userService.updateUser(id, body);
+            const { name, isEmployee } = JSON.parse(body);
+
+            ErrorHandler.validateStringParameter(id);
+
+            if (
+                !ErrorHandler.validateStringParameterReturningBool(name) ||
+                !ErrorHandler.validateBooleanParameterReturningBool(isEmployee)
+            )
+                throw new Error(ErrorHandler.invalidParametersMessage);
+
+            const user = await this.userService.updateUser(id, { name, isEmployee });
             return user;
         } catch (error: any) {
             return error.message;
         }
     }
 
-    async create(body: any): Promise<UserModel> {
+    async create(body: string): Promise<UserModel> {
         try {
-            const user = await this.userService.createUser(body);
+            const { name, email, isEmployee } = JSON.parse(body);
+
+            if (
+                !ErrorHandler.validateStringParameterReturningBool(name) ||
+                !ErrorHandler.validateStringParameterReturningBool(email) ||
+                !ErrorHandler.validateBooleanParameterReturningBool(isEmployee)
+            )
+                throw new Error(ErrorHandler.invalidParametersMessage);
+
+            const user = await this.userService.createUser({ name, email, isEmployee });
             return user;
         } catch (error: any) {
             return error.message;
@@ -47,6 +69,8 @@ export class UserController implements IUserController {
 
     async delete(id: string): Promise<void> {
         try {
+            ErrorHandler.validateStringParameter(id);
+
             const user = await this.userService.deleteUserById(id);
             return user;
         } catch (error: any) {

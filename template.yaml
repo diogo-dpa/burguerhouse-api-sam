@@ -21,7 +21,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          DATABASE_URL: postgresql://postgres:senha123@172.23.0.2:5432/postgres?schema=public
+          DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
         GetAllUsers:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api

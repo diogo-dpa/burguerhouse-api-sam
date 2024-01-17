@@ -6,6 +6,7 @@ import { PrismaUserRepository } from './src/repositories/prisma/PrismaUserReposi
 import * as schema from './prisma/schema.prisma';
 import * as x from './node_modules/.prisma/client/libquery_engine-debian-openssl-3.0.x.so.node';
 import * as l from './node_modules/.prisma/client/libquery_engine-rhel-openssl-1.0.x.so.node';
+import { ErrorHandler } from './src/utils/ErrorHandler';
 
 if (process.env.NODE_ENV !== 'production') {
     console.debug(schema, x, l);
@@ -28,11 +29,10 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
         const userController = new UserController(userService);
         console.log(JSON.stringify(event));
 
-        const formattedBody = event.body ? JSON.parse(event.body) : '';
         const idParameter = event.pathParameters?.id ?? '';
         switch (event.httpMethod) {
             case 'POST':
-                const resultPost = await userController.create(formattedBody);
+                const resultPost = await userController.create(event.body ?? '');
                 return {
                     statusCode: 200,
                     body: JSON.stringify({
@@ -58,7 +58,7 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
                     };
                 }
             case 'PUT':
-                const resultPut = await userController.update(idParameter, formattedBody);
+                const resultPut = await userController.update(idParameter, event.body ?? '');
                 return {
                     statusCode: 200,
                     body: JSON.stringify({
@@ -83,13 +83,8 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGat
                     }),
                 };
         }
-    } catch (err) {
-        console.log(err);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                message: 'some error happened',
-            }),
-        };
+    } catch (error) {
+        console.log(error);
+        return ErrorHandler.internalServerErrorHandler(error);
     }
 };
