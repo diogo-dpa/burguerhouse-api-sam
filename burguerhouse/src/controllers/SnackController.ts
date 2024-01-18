@@ -30,7 +30,9 @@ export class SnackController implements ISnackController {
 
     async update(id: string, body: string): Promise<SnackResponseModel> {
         try {
-            const { description, unitMoneyAmount, snackItems } = JSON.parse(body);
+            const { description, unitMoneyAmount, snackItems, ...rest } = JSON.parse(body);
+
+            ErrorHandler.validateUnsedParameters(rest);
 
             if (
                 (!ErrorHandler.validateStringParameterReturningBool(description) &&
@@ -54,7 +56,9 @@ export class SnackController implements ISnackController {
 
     async create(body: string): Promise<SnackResponseModel> {
         try {
-            const { name, description, unitMoneyAmount, snackItems } = JSON.parse(body);
+            const { name, description, unitMoneyAmount, snackItems, ...rest } = JSON.parse(body);
+
+            ErrorHandler.validateUnsedParameters(rest);
 
             if (
                 !ErrorHandler.validateStringParameterReturningBool(name) ||

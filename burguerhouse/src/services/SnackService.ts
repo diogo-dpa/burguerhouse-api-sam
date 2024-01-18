@@ -34,9 +34,8 @@ export class SnackService implements ISnackService {
         return SnackDto.convertPrismaModelToSnackModel(snack);
     }
 
-    async updateSnack(snackId: string, newSnack: SnackUpdateModel): Promise<SnackResponseModel> {
-        const formattedSnack = SnackDto.convertSnackUpdateModelToPrismaModel(newSnack);
-        const snack = await this.snackRepository.update(snackId, formattedSnack);
+    async updateSnack(snackId: string, updateSnack: SnackUpdateModel): Promise<SnackResponseModel> {
+        const snack = await this.snackRepository.update(snackId, updateSnack);
         return SnackDto.convertPrismaModelToSnackModel(snack);
     }
 

@@ -39,6 +39,10 @@ export class ErrorHandler {
         return true;
     }
 
+    static validateUnsedParameters(parameter: typeof Object) {
+        if (!!Object.keys(parameter).length) throw new Error(this.invalidParametersMessage);
+    }
+
     static internalServerErrorHandler(error: any): any {
         return {
             statusCode: 500,

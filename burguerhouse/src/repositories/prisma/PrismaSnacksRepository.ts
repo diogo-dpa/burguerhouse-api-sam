@@ -1,14 +1,18 @@
-import { Prisma } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { IPrismaSnacksRepository } from '../../irepositories/prisma/IPrismaSnacksRepository';
 import { SnackCreateModel } from '../../models/snack/SnackCreateModel';
 import { SnackPrismaModel } from '../../models/snack/SnackPrismaModel';
+import { SnackUpdateModel } from '../../models/snack/SnackUpdateModel';
 
 export class PrismaSnacksRepository implements IPrismaSnacksRepository {
     async getAll(): Promise<SnackPrismaModel[]> {
         const snacks = await prisma.snacks.findMany({
             include: {
-                snackItems: true,
+                snackItems: {
+                    include: {
+                        ingredient: true,
+                    },
+                },
             },
         });
 
@@ -21,7 +25,11 @@ export class PrismaSnacksRepository implements IPrismaSnacksRepository {
                 id,
             },
             include: {
-                snackItems: true,
+                snackItems: {
+                    include: {
+                        ingredient: true,
+                    },
+                },
             },
         });
 
@@ -30,7 +38,7 @@ export class PrismaSnacksRepository implements IPrismaSnacksRepository {
         return { ...snackFound, unitMoneyAmount: Number(snackFound?.unitMoneyAmount) };
     }
 
-    async update(id: string, updateData: Prisma.SnacksUpdateInput): Promise<SnackPrismaModel> {
+    async update(id: string, updateData: SnackUpdateModel): Promise<SnackPrismaModel> {
         const updatedSnack = await prisma.snacks.update({
             include: {
                 snackItems: {
@@ -43,7 +51,19 @@ export class PrismaSnacksRepository implements IPrismaSnacksRepository {
                 id,
             },
             data: {
-                ...updateData,
+                description: updateData.description,
+                unitMoneyAmount: updateData.unitMoneyAmount,
+                snackItems: {
+                    deleteMany: {},
+                    create: updateData.snackItems?.map((snackItem) => ({
+                        ingredientAmount: snackItem.ingredientAmount,
+                        ingredient: {
+                            connect: {
+                                id: snackItem.ingredientId,
+                            },
+                        },
+                    })),
+                },
             },
         });
 
