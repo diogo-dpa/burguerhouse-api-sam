@@ -83,10 +83,10 @@ model SnackItems {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  snack Snacks @relation(fields: [snackId], references: [id])
+  snack Snacks @relation(fields: [snackId], references: [id], onDelete: Cascade)
   snackId String
 
-  ingredient Ingredients @relation(fields: [ingredientId], references: [id])
+  ingredient Ingredients @relation(fields: [ingredientId], references: [id], onDelete: NoAction)
   ingredientId String
 }
 
