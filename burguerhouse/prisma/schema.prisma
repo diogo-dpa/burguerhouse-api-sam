@@ -39,9 +39,11 @@ model OrderItems {
 
   itemAmount Int
 
-  snacks Snacks[]
+  snack Snacks @relation(fields: [snackId], references: [id], onDelete: NoAction)
+  snackId String
 
-  ingredients Ingredients[]
+  ingredient Ingredients @relation(fields: [ingredientId], references: [id], onDelete: NoAction)
+  ingredientId String
 
   order Order @relation(fields: [orderId], references: [id])
   orderId String
