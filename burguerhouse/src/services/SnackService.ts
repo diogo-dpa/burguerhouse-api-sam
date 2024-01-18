@@ -28,13 +28,30 @@ export class SnackService implements ISnackService {
         const ingredients = await Promise.all([...ingredientPromise]);
 
         if (ingredients.some((ingredient) => ingredient === null))
-            throw new Error(ErrorHandler.ingredientNouFoundMessage);
+            throw new Error(ErrorHandler.ingredientNotFoundMessage);
 
         const snack = await this.snackRepository.create(newSnack);
         return SnackDto.convertPrismaModelToSnackModel(snack);
     }
 
     async updateSnack(snackId: string, updateSnack: SnackUpdateModel): Promise<SnackResponseModel> {
+        const { snackItems } = updateSnack;
+
+        if (!!snackItems?.length) {
+            const ingredientIdFromSnackItems = snackItems.map(
+                (ingredientSnackItem) => ingredientSnackItem.ingredientId,
+            );
+
+            const ingredientPromise = ingredientIdFromSnackItems
+                .filter((ingredientId) => !!ingredientId)
+                .map((ingredientId) => this.ingredientRepository.getById(ingredientId ?? ''));
+
+            const ingredients = await Promise.all([...ingredientPromise]);
+
+            if (ingredients.some((ingredient) => ingredient === null))
+                throw new Error(ErrorHandler.ingredientNotFoundMessage);
+        }
+
         const snack = await this.snackRepository.update(snackId, updateSnack);
         return SnackDto.convertPrismaModelToSnackModel(snack);
     }

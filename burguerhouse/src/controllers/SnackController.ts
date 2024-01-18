@@ -21,6 +21,7 @@ export class SnackController implements ISnackController {
 
     async getById(id: string): Promise<SnackResponseModel | null> {
         try {
+            ErrorHandler.validateStringParameter(id);
             const snack = await this.snackService.getSnackById(id);
             return snack;
         } catch (error: any) {
@@ -32,6 +33,7 @@ export class SnackController implements ISnackController {
         try {
             const { description, unitMoneyAmount, snackItems, ...rest } = JSON.parse(body);
 
+            ErrorHandler.validateStringParameter(id);
             ErrorHandler.validateUnsedParameters(rest);
 
             if (
@@ -84,6 +86,7 @@ export class SnackController implements ISnackController {
 
     async delete(id: string): Promise<void> {
         try {
+            ErrorHandler.validateStringParameter(id);
             await this.snackService.deleteSnackById(id);
         } catch (error: any) {
             return error.message;

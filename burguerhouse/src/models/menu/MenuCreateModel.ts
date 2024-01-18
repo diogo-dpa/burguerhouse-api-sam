@@ -1,24 +1,13 @@
-import { IngredientResponseModel } from '../ingredient/IngredientResponseModel';
-import { SnackResponseModel } from '../snack/SnackResponseModel';
+import { MenuItemCreateUpdateModel } from '../menuItem/MenuItemCreateUpdateModel';
 
 export class MenuCreateModel {
     name: string;
     description: string;
-    menuItems: MenuItems[];
+    menuItems: MenuItemCreateUpdateModel[];
 
-    constructor(_name: string, _description: string, _menuItems: MenuItems[]) {
+    constructor(_name: string, _description: string, _menuItems: MenuItemCreateUpdateModel[]) {
         this.name = _name;
         this.description = _description;
         this.menuItems = _menuItems;
-    }
-}
-
-class MenuItems {
-    snacks?: SnackResponseModel[];
-    ingredients?: IngredientResponseModel[];
-
-    constructor(_snacks: SnackResponseModel[], _ingredients: IngredientResponseModel[]) {
-        this.snacks = _snacks;
-        this.ingredients = _ingredients;
     }
 }

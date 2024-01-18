@@ -4,6 +4,7 @@ import * as l from './node_modules/.prisma/client/libquery_engine-rhel-openssl-1
 import { lambdaUserHandler } from './src/handlers/UserHandler';
 import { lambdaIngredientHandler } from './src/handlers/IngredientHandler';
 import { lambdaSnackHandler } from './src/handlers/SnackHandler';
+import { lambdaMenuHandler } from './src/handlers/MenuHandler';
 
 if (process.env.NODE_ENV !== 'production') {
     console.debug(schema, x, l);
@@ -19,4 +20,4 @@ if (process.env.NODE_ENV !== 'production') {
  *
  */
 
-export { lambdaUserHandler, lambdaIngredientHandler, lambdaSnackHandler };
+export { lambdaUserHandler, lambdaIngredientHandler, lambdaSnackHandler, lambdaMenuHandler };

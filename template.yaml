@@ -158,6 +158,55 @@ Resources:
         - .prisma=file
         - .so.node=file
         AssetNames: '[name]'
+  MenusFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: burguerhouse/
+      Handler: app.lambdaMenuHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
+      Events:
+        GetAllMenus:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /menus
+            Method: get
+        GetMenuById:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /menus/{id}
+            Method: get
+        CreateMenu:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /menus
+            Method: post
+        UpdateMenu:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /menus/{id}
+            Method: put
+        DeleteMenu:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /menus/{id}
+            Method: delete
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints: 
+        - app.ts
+        Loader:
+        - .prisma=file
+        - .so.node=file
+        AssetNames: '[name]'
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

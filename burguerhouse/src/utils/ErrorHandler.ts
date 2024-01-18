@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 export class ErrorHandler {
     public static invalidParametersMessage = 'Invalid params';
-    public static ingredientNouFoundMessage = 'Ingredient not found';
+    public static ingredientNotFoundMessage = 'Ingredient not found';
+    public static snackNotFoundMessage = 'Snack not found';
     public static internalServerErrorMessage = 'Internal server error';
 
     constructor() {}

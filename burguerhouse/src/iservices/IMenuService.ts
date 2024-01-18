@@ -1,11 +1,11 @@
 import { MenuCreateModel } from '../models/menu/MenuCreateModel';
-import { MenuModel } from '../models/menu/MenuModel';
+import { MenuResponseModel } from '../models/menu/MenuResponseModel';
 import { MenuUpdateModel } from '../models/menu/MenuUpdateModel';
 
 export interface IMenuService {
-    createMenu: (newMenu: MenuCreateModel) => Promise<MenuModel>;
-    updateMenu: (newMenu: MenuUpdateModel) => Promise<MenuModel>;
-    getAllMenus: () => Promise<MenuModel[]>;
-    getMenuById: (menuId: string) => Promise<MenuModel>;
+    createMenu: (newMenu: MenuCreateModel) => Promise<MenuResponseModel>;
+    updateMenu: (menuId: string, updateMenu: MenuUpdateModel) => Promise<MenuResponseModel>;
+    getAllMenus: () => Promise<MenuResponseModel[]>;
+    getMenuById: (menuId: string) => Promise<MenuResponseModel>;
     deleteMenuById: (menuId: string) => Promise<void>;
 }
