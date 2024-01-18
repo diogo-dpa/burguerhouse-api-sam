@@ -5,6 +5,7 @@ import { lambdaUserHandler } from './src/handlers/UserHandler';
 import { lambdaIngredientHandler } from './src/handlers/IngredientHandler';
 import { lambdaSnackHandler } from './src/handlers/SnackHandler';
 import { lambdaMenuHandler } from './src/handlers/MenuHandler';
+import { lambdaOrderHandler } from './src/handlers/OrderHandler';
 
 if (process.env.NODE_ENV !== 'production') {
     console.debug(schema, x, l);
@@ -20,4 +21,4 @@ if (process.env.NODE_ENV !== 'production') {
  *
  */
 
-export { lambdaUserHandler, lambdaIngredientHandler, lambdaSnackHandler, lambdaMenuHandler };
+export { lambdaUserHandler, lambdaIngredientHandler, lambdaSnackHandler, lambdaMenuHandler, lambdaOrderHandler };

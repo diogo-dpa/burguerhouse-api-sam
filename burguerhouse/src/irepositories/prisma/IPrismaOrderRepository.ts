@@ -1,7 +1,8 @@
-import { Prisma, Order } from '@prisma/client';
+import { OrderPrismaModel } from '../../models/order/OrderPrismaModel';
+import { OrderCreateModel } from '../../models/order/OrderCreateModel';
 
 export interface IPrismaOrderRepository {
-    getAll: () => Promise<Order[]>;
-    getById: (id: string) => Promise<Order | null>;
-    create: (newData: Prisma.OrderCreateInput) => Promise<Order>;
+    getAll: () => Promise<OrderPrismaModel[]>;
+    getById: (id: string) => Promise<OrderPrismaModel | null>;
+    create: (newData: OrderCreateModel) => Promise<OrderPrismaModel>;
 }

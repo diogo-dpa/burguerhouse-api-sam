@@ -1,11 +1,11 @@
-import { OrderModel } from '../order/OrderModel';
+import { OrderPrismaModel } from '../order/OrderPrismaModel';
 
 export class UserPrismaModel {
     id: string;
     name: string;
     email: string;
     isEmployee: boolean;
-    orders?: OrderModel[];
+    orders?: OrderPrismaModel[];
 
     constructor(
         _id: string,
@@ -13,7 +13,7 @@ export class UserPrismaModel {
         _email: string,
         _isEmployee: boolean,
         _createdAt: Date,
-        _orders: OrderModel[],
+        _orders: OrderPrismaModel[],
     ) {
         this.id = _id;
         this.name = _name;
