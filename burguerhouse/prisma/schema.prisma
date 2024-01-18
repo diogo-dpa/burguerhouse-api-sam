@@ -86,7 +86,8 @@ model SnackItems {
   snack Snacks @relation(fields: [snackId], references: [id])
   snackId String
 
-  ingredients Ingredients[]
+  ingredient Ingredients @relation(fields: [ingredientId], references: [id])
+  ingredientId String
 }
 
 model Menus {
