@@ -108,7 +108,9 @@ model MenuItems {
   menu Menus @relation(fields: [menuId], references: [id])
   menuId String
 
-  snacks Snacks[]
+  snack Snacks @relation(fields: [snackId], references: [id], onDelete: NoAction)
+  snackId String
 
-  ingredients Ingredients[]
+  ingredient Ingredients @relation(fields: [ingredientId], references: [id], onDelete: NoAction)
+  ingredientId String
 }
