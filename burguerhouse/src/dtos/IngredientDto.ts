@@ -1,7 +1,8 @@
-import { Ingredients, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { IngredientCreateModel } from '../models/ingredient/IngredientCreateModel';
-import { IngredientModel } from '../models/ingredient/IngredientModel';
+import { IngredientResponseModel } from '../models/ingredient/IngredientResponseModel';
 import { IngredientUpdateModel } from '../models/ingredient/IngredientUpdateModel';
+import { IngredientPrismaModel } from '../models/ingredient/IngredienPrismaModel';
 
 export class IngredientDto {
     static convertIngredientCreateModelToPrismaModel(ingredient: IngredientCreateModel): Prisma.IngredientsCreateInput {
@@ -20,27 +21,25 @@ export class IngredientDto {
         };
     }
 
-    static convertIngredientsToIngredientsModel(ingredient: Ingredients | null): IngredientModel {
-        if (!ingredient) return {} as IngredientModel;
+    static convertIngredientsToIngredientsModel(ingredient: IngredientPrismaModel | null): IngredientResponseModel {
+        if (!ingredient) return {} as IngredientResponseModel;
 
         return {
             id: ingredient.id,
             name: ingredient.name,
             availableAmount: ingredient.availableAmount,
             unitMoneyAmount: Number(ingredient.unitMoneyAmount),
-            createdAt: ingredient.createdAt,
-            updatedAt: ingredient.updatedAt,
         };
     }
 
-    static convertIngredientsArrayToIngredientsModelArray(ingredients: Ingredients[]): IngredientModel[] {
+    static convertIngredientsArrayToIngredientsModelArray(
+        ingredients: IngredientPrismaModel[],
+    ): IngredientResponseModel[] {
         return ingredients.map((ingredient) => ({
             id: ingredient.id,
             name: ingredient.name,
             availableAmount: ingredient.availableAmount,
             unitMoneyAmount: Number(ingredient.unitMoneyAmount),
-            createdAt: ingredient.createdAt,
-            updatedAt: ingredient.updatedAt,
         }));
     }
 }

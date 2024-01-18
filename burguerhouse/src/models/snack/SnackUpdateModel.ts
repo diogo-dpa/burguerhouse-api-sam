@@ -1,4 +1,4 @@
-import { IngredientModel } from '../ingredient/IngredientModel';
+import { IngredientResponseModel } from '../ingredient/IngredientResponseModel';
 
 export class SnackUpdateModel {
     description: string;
@@ -14,9 +14,9 @@ export class SnackUpdateModel {
 
 export class SnackItems {
     ingredientAmount: number;
-    ingredient?: IngredientModel;
+    ingredient?: IngredientResponseModel;
 
-    constructor(_ingredientAmount: number, _ingredient: IngredientModel) {
+    constructor(_ingredientAmount: number, _ingredient: IngredientResponseModel) {
         this.ingredientAmount = _ingredientAmount;
         this.ingredient = _ingredient;
     }

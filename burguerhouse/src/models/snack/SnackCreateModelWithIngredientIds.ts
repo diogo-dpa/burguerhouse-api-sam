@@ -1,4 +1,4 @@
-import { IngredientModel } from '../ingredient/IngredientModel';
+import { IngredientResponseModel } from '../ingredient/IngredientResponseModel';
 
 export class SnackCreateModelWithIngredientIds {
     name: string;
@@ -16,9 +16,9 @@ export class SnackCreateModelWithIngredientIds {
 
 class SnackItems {
     ingredientAmount: number;
-    ingredient: Pick<IngredientModel, 'id'>;
+    ingredient: Pick<IngredientResponseModel, 'id'>;
 
-    constructor(_ingredientAmount: number, _ingredient: IngredientModel) {
+    constructor(_ingredientAmount: number, _ingredient: IngredientResponseModel) {
         this.ingredientAmount = _ingredientAmount;
         this.ingredient = _ingredient;
     }

@@ -39,7 +39,7 @@ export class SnackController implements ISnackController {
                 !Array.isArray(snackItems) ||
                 snackItems.length === 0
             )
-                throw new Error('Invalid parameters');
+                throw new Error(ErrorHandler.invalidParametersMessage);
 
             const snack = await this.snackService.updateSnack(id, {
                 description,

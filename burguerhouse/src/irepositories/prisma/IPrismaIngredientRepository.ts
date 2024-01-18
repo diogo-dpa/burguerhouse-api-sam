@@ -1,9 +1,10 @@
-import { Prisma, Ingredients } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { IngredientPrismaModel } from '../../models/ingredient/IngredienPrismaModel';
 
 export interface IPrismaIngredientRepository {
-    getAll: () => Promise<Ingredients[]>;
-    getById: (id: string) => Promise<Ingredients | null>;
-    update: (id: string, updateData: Prisma.IngredientsUpdateInput) => Promise<Ingredients>;
-    create: (newData: Prisma.IngredientsCreateInput) => Promise<Ingredients>;
+    getAll: () => Promise<IngredientPrismaModel[]>;
+    getById: (id: string) => Promise<IngredientPrismaModel | null>;
+    update: (id: string, updateData: Prisma.IngredientsUpdateInput) => Promise<IngredientPrismaModel>;
+    create: (newData: Prisma.IngredientsCreateInput) => Promise<IngredientPrismaModel>;
     delete: (id: string) => Promise<void>;
 }

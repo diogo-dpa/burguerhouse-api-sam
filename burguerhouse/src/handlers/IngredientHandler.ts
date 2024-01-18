@@ -3,6 +3,7 @@ import { IngredientController } from '../controllers/IngredientController';
 import { IngredientService } from '../services/IngredientService';
 import { PrismaIngredientRepository } from '../repositories/prisma/PrismaIngredientRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
+import { HTTPMethodEnum } from '../utils/commonEnums';
 
 export const lambdaIngredientHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
@@ -13,7 +14,7 @@ export const lambdaIngredientHandler = async (event: APIGatewayProxyEvent): Prom
 
         const idParameter = event.pathParameters?.id ?? '';
         switch (event.httpMethod) {
-            case 'POST':
+            case HTTPMethodEnum.POST.toString():
                 const resultPost = await ingredientController.create(event.body ?? '');
                 return {
                     statusCode: 200,
@@ -21,7 +22,7 @@ export const lambdaIngredientHandler = async (event: APIGatewayProxyEvent): Prom
                         data: resultPost,
                     }),
                 };
-            case 'GET':
+            case HTTPMethodEnum.GET.toString():
                 if (idParameter) {
                     const resultGet = await ingredientController.getById(idParameter);
                     return {
@@ -39,7 +40,7 @@ export const lambdaIngredientHandler = async (event: APIGatewayProxyEvent): Prom
                         }),
                     };
                 }
-            case 'PUT':
+            case HTTPMethodEnum.PUT.toString():
                 const resultPut = await ingredientController.update(idParameter, event.body ?? '');
                 return {
                     statusCode: 200,
@@ -47,7 +48,7 @@ export const lambdaIngredientHandler = async (event: APIGatewayProxyEvent): Prom
                         data: resultPut,
                     }),
                 };
-            case 'DELETE':
+            case HTTPMethodEnum.DELETE.toString():
                 await ingredientController.delete(idParameter);
                 return {
                     statusCode: 200,
@@ -57,11 +58,10 @@ export const lambdaIngredientHandler = async (event: APIGatewayProxyEvent): Prom
                 };
 
             default:
-                console.log('ERROR');
                 return {
                     statusCode: 200,
                     body: JSON.stringify({
-                        message: 'ERRO',
+                        message: 'Something went wrong',
                     }),
                 };
         }

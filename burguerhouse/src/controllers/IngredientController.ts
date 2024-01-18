@@ -1,6 +1,6 @@
 import { IIngredientController } from '../icontrollers/IIngredientController';
 import { IIngredientService } from '../iservices/IIngredientService';
-import { IngredientModel } from '../models/ingredient/IngredientModel';
+import { IngredientResponseModel } from '../models/ingredient/IngredientResponseModel';
 import { ErrorHandler } from '../utils/ErrorHandler';
 
 export class IngredientController implements IIngredientController {
@@ -10,7 +10,7 @@ export class IngredientController implements IIngredientController {
         this.ingredientService = _ingredientService;
     }
 
-    async getAll(): Promise<IngredientModel[]> {
+    async getAll(): Promise<IngredientResponseModel[]> {
         try {
             const ingredients = await this.ingredientService.getAllIngredients();
             return ingredients;
@@ -19,7 +19,7 @@ export class IngredientController implements IIngredientController {
         }
     }
 
-    async getById(id: string): Promise<IngredientModel | null> {
+    async getById(id: string): Promise<IngredientResponseModel | null> {
         try {
             ErrorHandler.validateStringParameter(id);
             const ingredient = await this.ingredientService.getIngredientById(id);
@@ -29,7 +29,7 @@ export class IngredientController implements IIngredientController {
         }
     }
 
-    async update(id: string, body: string): Promise<IngredientModel> {
+    async update(id: string, body: string): Promise<IngredientResponseModel> {
         try {
             const { name, unitMoneyAmount, availableAmount } = JSON.parse(body);
 
@@ -53,7 +53,7 @@ export class IngredientController implements IIngredientController {
         }
     }
 
-    async create(body: string): Promise<IngredientModel> {
+    async create(body: string): Promise<IngredientResponseModel> {
         try {
             const { name, unitMoneyAmount, availableAmount } = JSON.parse(body);
 

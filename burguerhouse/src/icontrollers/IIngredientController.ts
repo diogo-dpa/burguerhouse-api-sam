@@ -1,9 +1,9 @@
-import { IngredientModel } from '../models/ingredient/IngredientModel';
+import { IngredientResponseModel } from '../models/ingredient/IngredientResponseModel';
 
 export interface IIngredientController {
-    getAll: () => Promise<IngredientModel[]>;
-    getById: (id: string) => Promise<IngredientModel | null>;
-    update: (id: string, body: string) => Promise<IngredientModel>;
-    create: (body: string) => Promise<IngredientModel>;
+    getAll: () => Promise<IngredientResponseModel[]>;
+    getById: (id: string) => Promise<IngredientResponseModel | null>;
+    update: (id: string, body: string) => Promise<IngredientResponseModel>;
+    create: (body: string) => Promise<IngredientResponseModel>;
     delete: (id: string) => Promise<void>;
 }

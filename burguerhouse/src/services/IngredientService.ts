@@ -1,7 +1,7 @@
 import { IngredientDto } from '../dtos/IngredientDto';
 import { IIngredientService } from '../iservices/IIngredientService';
 import { IngredientCreateModel } from '../models/ingredient/IngredientCreateModel';
-import { IngredientModel } from '../models/ingredient/IngredientModel';
+import { IngredientResponseModel } from '../models/ingredient/IngredientResponseModel';
 import { IngredientUpdateModel } from '../models/ingredient/IngredientUpdateModel';
 import { PrismaIngredientRepository } from '../repositories/prisma/PrismaIngredientRepository';
 
@@ -12,24 +12,24 @@ export class IngredientService implements IIngredientService {
         this.ingredientRepository = _ingredientRepository;
     }
 
-    async createIngredient(newIngredient: IngredientCreateModel): Promise<IngredientModel> {
+    async createIngredient(newIngredient: IngredientCreateModel): Promise<IngredientResponseModel> {
         const formattedIngredient = IngredientDto.convertIngredientCreateModelToPrismaModel(newIngredient);
         const ingredient = await this.ingredientRepository.create(formattedIngredient);
         return IngredientDto.convertIngredientsToIngredientsModel(ingredient);
     }
 
-    async updateIngredient(id: string, newIngredient: IngredientUpdateModel): Promise<IngredientModel> {
+    async updateIngredient(id: string, newIngredient: IngredientUpdateModel): Promise<IngredientResponseModel> {
         const formattedIngredient = IngredientDto.converIngredientUpdateModelToPrismaModel(newIngredient);
         const ingredient = await this.ingredientRepository.update(id, formattedIngredient);
         return IngredientDto.convertIngredientsToIngredientsModel(ingredient);
     }
 
-    async getAllIngredients(): Promise<IngredientModel[]> {
+    async getAllIngredients(): Promise<IngredientResponseModel[]> {
         const ingredients = await this.ingredientRepository.getAll();
         return IngredientDto.convertIngredientsArrayToIngredientsModelArray(ingredients);
     }
 
-    async getIngredientById(IngredientId: string): Promise<IngredientModel> {
+    async getIngredientById(IngredientId: string): Promise<IngredientResponseModel> {
         const ingredient = await this.ingredientRepository.getById(IngredientId);
         return IngredientDto.convertIngredientsToIngredientsModel(ingredient);
     }

@@ -1,4 +1,4 @@
-export class IngredientModel {
+export class IngredientPrismaModel {
     id: string;
     name: string;
     unitMoneyAmount: number;
