@@ -1,12 +1,12 @@
 import { IngredientModel } from '../ingredient/IngredientModel';
 
-export class SnackCreateModel {
+export class SnackCreateModelWithFullIngredient {
     name: string;
-    description: number;
+    description: string;
     unitMoneyAmount: number;
     snackItems: SnackItems[];
 
-    constructor(_name: string, _description: number, _snackItems: SnackItems[], _unitMoneyAmount: number) {
+    constructor(_name: string, _description: string, _snackItems: SnackItems[], _unitMoneyAmount: number) {
         this.name = _name;
         this.description = _description;
         this.snackItems = _snackItems;
@@ -16,10 +16,10 @@ export class SnackCreateModel {
 
 class SnackItems {
     ingredientAmount: number;
-    ingredients?: IngredientModel[];
+    ingredient: IngredientModel;
 
-    constructor(_ingredientAmount: number, _ingredients: IngredientModel[]) {
+    constructor(_ingredientAmount: number, _ingredient: IngredientModel) {
         this.ingredientAmount = _ingredientAmount;
-        this.ingredients = _ingredients;
+        this.ingredient = _ingredient;
     }
 }

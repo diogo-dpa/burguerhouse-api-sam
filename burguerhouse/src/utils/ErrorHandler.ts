@@ -32,6 +32,12 @@ export class ErrorHandler {
             throw new Error(this.invalidParametersMessage);
     }
 
+    static validateNumberParameterReturningBool(parameter: number): boolean {
+        if (parameter === null || parameter === undefined || typeof parameter !== 'number') return false;
+
+        return true;
+    }
+
     static internalServerErrorHandler(error: any): any {
         return {
             statusCode: 500,

@@ -1,18 +1,22 @@
-import { Prisma, Snacks } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { IPrismaSnacksRepository } from '../../irepositories/prisma/IPrismaSnacksRepository';
+import { SnackCreateModelWithIngredientIds } from '../../models/snack/SnackCreateModelWithIngredientIds';
+import { SnackPrismaModel } from '../../models/snack/SnackPrismaModel';
 
 export class PrismaSnacksRepository implements IPrismaSnacksRepository {
-    async getAll(): Promise<Snacks[]> {
-        return await prisma.snacks.findMany({
+    async getAll(): Promise<SnackPrismaModel[]> {
+        const snacks = await prisma.snacks.findMany({
             include: {
                 snackItems: true,
             },
         });
+
+        return snacks.map((snack) => ({ ...snack, unitMoneyAmount: Number(snack.unitMoneyAmount) }));
     }
 
-    async getById(id: string): Promise<Snacks | null> {
-        const userFound = await prisma.snacks.findUnique({
+    async getById(id: string): Promise<SnackPrismaModel | null> {
+        const snackFound = await prisma.snacks.findUnique({
             where: {
                 id,
             },
@@ -21,34 +25,58 @@ export class PrismaSnacksRepository implements IPrismaSnacksRepository {
             },
         });
 
-        return userFound;
+        if (!snackFound) return {} as SnackPrismaModel;
+
+        return { ...snackFound, unitMoneyAmount: Number(snackFound?.unitMoneyAmount) };
     }
 
-    async update(id: string, updateData: Prisma.SnacksUpdateInput): Promise<Snacks> {
-        const updatedUser = await prisma.snacks.update({
+    async update(id: string, updateData: Prisma.SnacksUpdateInput): Promise<SnackPrismaModel> {
+        const updatedSnack = await prisma.snacks.update({
+            include: {
+                snackItems: {
+                    include: {
+                        ingredient: true,
+                    },
+                },
+            },
             where: {
                 id,
             },
-            data: { ...updateData },
-            include: {
-                snackItems: true,
-            },
-        });
-
-        return updatedUser;
-    }
-
-    async create(newData: Prisma.SnacksCreateInput): Promise<Snacks> {
-        const createdUser = await prisma.snacks.create({
             data: {
-                ...newData,
-            },
-            include: {
-                snackItems: true,
+                ...updateData,
             },
         });
 
-        return createdUser;
+        return { ...updatedSnack, unitMoneyAmount: Number(updatedSnack.unitMoneyAmount) };
+    }
+
+    async create(newData: SnackCreateModelWithIngredientIds): Promise<SnackPrismaModel> {
+        const createdSnack = await prisma.snacks.create({
+            include: {
+                snackItems: {
+                    include: {
+                        ingredient: true,
+                    },
+                },
+            },
+            data: {
+                name: newData.name,
+                description: newData.description,
+                unitMoneyAmount: newData.unitMoneyAmount,
+                snackItems: {
+                    create: newData.snackItems?.map((snackItem) => ({
+                        ingredientAmount: snackItem.ingredientAmount,
+                        ingredient: {
+                            connect: {
+                                id: snackItem.ingredient.id,
+                            },
+                        },
+                    })),
+                },
+            },
+        });
+
+        return { ...createdSnack, unitMoneyAmount: Number(createdSnack.unitMoneyAmount) };
     }
 
     async delete(id: string): Promise<void> {

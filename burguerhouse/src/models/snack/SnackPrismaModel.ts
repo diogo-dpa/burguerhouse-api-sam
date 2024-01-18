@@ -1,19 +1,19 @@
-import { IngredientModel } from '../ingredient/IngredientModel';
+import { SnackItemPrismaModel } from '../snackItem/SnackItemPrismaModel';
 
-export class SnackModel {
+export class SnackPrismaModel {
     id: string;
     name: string;
-    description: number;
+    description: string;
     unitMoneyAmount: number;
-    snackItems: SnackItems[];
+    snackItems: SnackItemPrismaModel[];
     createdAt: Date;
     updatedAt: Date;
 
     constructor(
         _id: string,
         _name: string,
-        _description: number,
-        _snackItems: SnackItems[],
+        _description: string,
+        _snackItems: SnackItemPrismaModel[],
         _unitMoneyAmount: number,
         _createdAt: Date,
         _updatedAt: Date,
@@ -25,15 +25,5 @@ export class SnackModel {
         this.unitMoneyAmount = _unitMoneyAmount;
         this.createdAt = _createdAt;
         this.updatedAt = _updatedAt;
-    }
-}
-
-class SnackItems {
-    ingredientAmount: number;
-    ingredients?: IngredientModel[];
-
-    constructor(_ingredientAmount: number, _ingredients: IngredientModel[]) {
-        this.ingredientAmount = _ingredientAmount;
-        this.ingredients = _ingredients;
     }
 }

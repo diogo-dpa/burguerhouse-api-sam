@@ -37,7 +37,7 @@ export class UserController implements IUserController {
             ErrorHandler.validateStringParameter(id);
 
             if (
-                !ErrorHandler.validateStringParameterReturningBool(name) ||
+                !ErrorHandler.validateStringParameterReturningBool(name) &&
                 !ErrorHandler.validateBooleanParameterReturningBool(isEmployee)
             )
                 throw new Error(ErrorHandler.invalidParametersMessage);

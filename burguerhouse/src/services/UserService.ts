@@ -14,8 +14,6 @@ export class UserService implements IUserService {
     }
 
     async createUser(newUser: UserCreateModel): Promise<UserModel> {
-        if (!newUser || !Object.keys(newUser).length) throw new Error(ERROR_MESSAGE_INVALID_PARAMS);
-
         const user = UserDto.convertUserCreateModelToPrismaModel(newUser);
         const createdUser = await this.userRepository.create(user);
 
@@ -23,8 +21,6 @@ export class UserService implements IUserService {
     }
 
     async updateUser(userId: string, user: UserUpdateModel): Promise<UserModel> {
-        if (!userId || !Object.keys(user).length) throw new Error(ERROR_MESSAGE_INVALID_PARAMS);
-
         const formattedUser = UserDto.convertUserUpdateModelToPrismaModel(user);
         const updatedUser = await this.userRepository.update(userId, formattedUser);
 
@@ -38,16 +34,12 @@ export class UserService implements IUserService {
     }
 
     async getUserById(userId: string): Promise<UserModel | null> {
-        if (!userId) throw new Error(ERROR_MESSAGE_INVALID_PARAMS);
-
         const foundUser = await this.userRepository.getById(userId);
 
         return UserDto.convertPrismaModelToUserModel(foundUser);
     }
 
     async deleteUserById(userId: string): Promise<void> {
-        if (!userId) throw new Error(ERROR_MESSAGE_INVALID_PARAMS);
-
         await this.userRepository.delete(userId);
     }
 }

@@ -4,8 +4,8 @@ import { IngredientUpdateModel } from '../models/ingredient/IngredientUpdateMode
 
 export interface IIngredientService {
     createIngredient: (newIngredient: IngredientCreateModel) => Promise<IngredientModel>;
-    updateIngredient: (newIngredient: IngredientUpdateModel) => Promise<IngredientModel>;
+    updateIngredient: (ingredientId: string, newIngredient: IngredientUpdateModel) => Promise<IngredientModel>;
     getAllIngredients: () => Promise<IngredientModel[]>;
-    getIngredientById: (IngredientId: string) => Promise<IngredientModel>;
-    deleteIngredientById: (IngredientId: string) => Promise<void>;
+    getIngredientById: (ingredientId: string) => Promise<IngredientModel>;
+    deleteIngredientById: (ingredientId: string) => Promise<void>;
 }

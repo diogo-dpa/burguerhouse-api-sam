@@ -1,9 +1,11 @@
-import { Prisma, Snacks } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { SnackCreateModelWithIngredientIds } from '../../models/snack/SnackCreateModelWithIngredientIds';
+import { SnackPrismaModel } from '../../models/snack/SnackPrismaModel';
 
 export interface IPrismaSnacksRepository {
-    getAll: () => Promise<Snacks[]>;
-    getById: (id: string) => Promise<Snacks | null>;
-    update: (id: string, updateData: Prisma.SnacksUpdateInput) => Promise<Snacks>;
-    create: (newData: Prisma.SnacksCreateInput) => Promise<Snacks>;
+    getAll: () => Promise<SnackPrismaModel[]>;
+    getById: (id: string) => Promise<SnackPrismaModel | null>;
+    update: (id: string, updateData: Prisma.SnacksUpdateInput) => Promise<SnackPrismaModel>;
+    create: (newData: SnackCreateModelWithIngredientIds) => Promise<SnackPrismaModel>;
     delete: (id: string) => Promise<void>;
 }

@@ -1,11 +1,11 @@
 import { SnackUpdateModel } from '../models/snack/SnackUpdateModel';
-import { SnackCreateModel } from '../models/snack/SnackCreateModel';
-import { SnackModel } from '../models/snack/SnackModel';
+import { SnackCreateModelWithIngredientIds } from '../models/snack/SnackCreateModelWithIngredientIds';
+import { SnackResponseModel } from '../models/snack/SnackResponseModel';
 
 export interface ISnackService {
-    createSnack: (newSnack: SnackCreateModel) => Promise<SnackModel>;
-    updateSnack: (newSnack: SnackUpdateModel) => Promise<SnackModel>;
-    getAllSnacks: () => Promise<SnackModel[]>;
-    getSnackById: (snackId: string) => Promise<SnackModel>;
+    createSnack: (newSnack: SnackCreateModelWithIngredientIds) => Promise<SnackResponseModel>;
+    updateSnack: (snackId: string, newSnack: SnackUpdateModel) => Promise<SnackResponseModel>;
+    getAllSnacks: () => Promise<SnackResponseModel[]>;
+    getSnackById: (snackId: string) => Promise<SnackResponseModel>;
     deleteSnackById: (snackId: string) => Promise<void>;
 }
