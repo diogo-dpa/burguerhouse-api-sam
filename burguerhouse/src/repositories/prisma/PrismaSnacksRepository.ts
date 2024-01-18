@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { IPrismaSnacksRepository } from '../../irepositories/prisma/IPrismaSnacksRepository';
-import { SnackCreateModelWithIngredientIds } from '../../models/snack/SnackCreateModelWithIngredientIds';
+import { SnackCreateModel } from '../../models/snack/SnackCreateModel';
 import { SnackPrismaModel } from '../../models/snack/SnackPrismaModel';
 
 export class PrismaSnacksRepository implements IPrismaSnacksRepository {
@@ -25,7 +25,7 @@ export class PrismaSnacksRepository implements IPrismaSnacksRepository {
             },
         });
 
-        if (!snackFound) return {} as SnackPrismaModel;
+        if (!snackFound) return null;
 
         return { ...snackFound, unitMoneyAmount: Number(snackFound?.unitMoneyAmount) };
     }
@@ -50,7 +50,7 @@ export class PrismaSnacksRepository implements IPrismaSnacksRepository {
         return { ...updatedSnack, unitMoneyAmount: Number(updatedSnack.unitMoneyAmount) };
     }
 
-    async create(newData: SnackCreateModelWithIngredientIds): Promise<SnackPrismaModel> {
+    async create(newData: SnackCreateModel): Promise<SnackPrismaModel> {
         const createdSnack = await prisma.snacks.create({
             include: {
                 snackItems: {
@@ -68,7 +68,7 @@ export class PrismaSnacksRepository implements IPrismaSnacksRepository {
                         ingredientAmount: snackItem.ingredientAmount,
                         ingredient: {
                             connect: {
-                                id: snackItem.ingredient.id,
+                                id: snackItem.ingredientId,
                             },
                         },
                     })),

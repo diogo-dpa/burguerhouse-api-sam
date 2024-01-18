@@ -1,10 +1,11 @@
 import { SnackDto } from '../dtos/SnackDto';
 import { ISnackService } from '../iservices/ISnackService';
-import { SnackCreateModelWithIngredientIds } from '../models/snack/SnackCreateModelWithIngredientIds';
+import { SnackCreateModel } from '../models/snack/SnackCreateModel';
 import { SnackResponseModel } from '../models/snack/SnackResponseModel';
 import { SnackUpdateModel } from '../models/snack/SnackUpdateModel';
 import { PrismaIngredientRepository } from '../repositories/prisma/PrismaIngredientRepository';
 import { PrismaSnacksRepository } from '../repositories/prisma/PrismaSnacksRepository';
+import { ErrorHandler } from '../utils/ErrorHandler';
 
 export class SnackService implements ISnackService {
     private snackRepository: PrismaSnacksRepository;
@@ -15,18 +16,19 @@ export class SnackService implements ISnackService {
         this.ingredientRepository = _ingredientRepository;
     }
 
-    async createSnack(newSnack: SnackCreateModelWithIngredientIds): Promise<SnackResponseModel> {
+    async createSnack(newSnack: SnackCreateModel): Promise<SnackResponseModel> {
         const { snackItems } = newSnack;
 
-        const ingredientIdFromSnackItems = snackItems.map((ingredientSnackItem) => ingredientSnackItem.ingredient.id);
+        const ingredientIdFromSnackItems = snackItems.map((ingredientSnackItem) => ingredientSnackItem.ingredientId);
 
-        const ingredientPromise = ingredientIdFromSnackItems.map((ingredientId) =>
-            this.ingredientRepository.getById(ingredientId),
-        );
+        const ingredientPromise = ingredientIdFromSnackItems
+            .filter((ingredientId) => !!ingredientId)
+            .map((ingredientId) => this.ingredientRepository.getById(ingredientId ?? ''));
 
         const ingredients = await Promise.all([...ingredientPromise]);
 
-        if (ingredients.some((ingredient) => ingredient === null)) throw new Error('Ingredient not found');
+        if (ingredients.some((ingredient) => ingredient === null))
+            throw new Error(ErrorHandler.ingredientNouFoundMessage);
 
         const snack = await this.snackRepository.create(newSnack);
         return SnackDto.convertPrismaModelToSnackModel(snack);

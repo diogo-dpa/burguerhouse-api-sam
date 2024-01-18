@@ -4,6 +4,7 @@ import { SnackService } from '../services/SnackService';
 import { PrismaSnacksRepository } from '../repositories/prisma/PrismaSnacksRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
 import { PrismaIngredientRepository } from '../repositories/prisma/PrismaIngredientRepository';
+import { HTTPMethodEnum } from '../utils/commonEnums';
 
 export const lambdaSnackHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
@@ -11,11 +12,10 @@ export const lambdaSnackHandler = async (event: APIGatewayProxyEvent): Promise<A
         const ingredientRepository = new PrismaIngredientRepository();
         const snackService = new SnackService(snackRepository, ingredientRepository);
         const snackController = new SnackController(snackService);
-        console.log(JSON.stringify(event));
 
         const idParameter = event.pathParameters?.id ?? '';
         switch (event.httpMethod) {
-            case 'POST':
+            case HTTPMethodEnum.POST.toString():
                 const resultPost = await snackController.create(event.body ?? '');
                 return {
                     statusCode: 200,
@@ -23,7 +23,7 @@ export const lambdaSnackHandler = async (event: APIGatewayProxyEvent): Promise<A
                         data: resultPost,
                     }),
                 };
-            case 'GET':
+            case HTTPMethodEnum.GET.toString():
                 if (idParameter) {
                     const resultGet = await snackController.getById(idParameter);
                     return {
@@ -41,7 +41,7 @@ export const lambdaSnackHandler = async (event: APIGatewayProxyEvent): Promise<A
                         }),
                     };
                 }
-            case 'PUT':
+            case HTTPMethodEnum.PUT.toString():
                 const resultPut = await snackController.update(idParameter, event.body ?? '');
                 return {
                     statusCode: 200,
@@ -49,7 +49,7 @@ export const lambdaSnackHandler = async (event: APIGatewayProxyEvent): Promise<A
                         data: resultPut,
                     }),
                 };
-            case 'DELETE':
+            case HTTPMethodEnum.DELETE.toString():
                 await snackController.delete(idParameter);
                 return {
                     statusCode: 200,
@@ -59,11 +59,10 @@ export const lambdaSnackHandler = async (event: APIGatewayProxyEvent): Promise<A
                 };
 
             default:
-                console.log('ERROR');
                 return {
                     statusCode: 200,
                     body: JSON.stringify({
-                        message: 'ERRO',
+                        message: 'Something went wrong',
                     }),
                 };
         }
