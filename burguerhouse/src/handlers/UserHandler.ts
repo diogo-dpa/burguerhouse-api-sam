@@ -3,6 +3,7 @@ import { UserController } from '../controllers/UserController';
 import { UserService } from '../services/UserService';
 import { PrismaUserRepository } from '../repositories/prisma/PrismaUserRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
+import { HTTPMethodEnum } from '../utils/commonEnums';
 
 export const lambdaUserHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
@@ -13,7 +14,7 @@ export const lambdaUserHandler = async (event: APIGatewayProxyEvent): Promise<AP
 
         const idParameter = event.pathParameters?.id ?? '';
         switch (event.httpMethod) {
-            case 'POST':
+            case HTTPMethodEnum.POST.toString():
                 const resultPost = await userController.create(event.body ?? '');
                 return {
                     statusCode: 200,
@@ -21,7 +22,7 @@ export const lambdaUserHandler = async (event: APIGatewayProxyEvent): Promise<AP
                         data: resultPost,
                     }),
                 };
-            case 'GET':
+            case HTTPMethodEnum.GET.toString():
                 if (idParameter) {
                     const resultGet = await userController.getById(idParameter);
                     return {
@@ -39,7 +40,7 @@ export const lambdaUserHandler = async (event: APIGatewayProxyEvent): Promise<AP
                         }),
                     };
                 }
-            case 'PUT':
+            case HTTPMethodEnum.PUT.toString():
                 const resultPut = await userController.update(idParameter, event.body ?? '');
                 return {
                     statusCode: 200,
@@ -47,7 +48,7 @@ export const lambdaUserHandler = async (event: APIGatewayProxyEvent): Promise<AP
                         data: resultPut,
                     }),
                 };
-            case 'DELETE':
+            case HTTPMethodEnum.DELETE.toString():
                 await userController.delete(idParameter);
                 return {
                     statusCode: 200,
@@ -57,11 +58,10 @@ export const lambdaUserHandler = async (event: APIGatewayProxyEvent): Promise<AP
                 };
 
             default:
-                console.log('ERROR');
                 return {
-                    statusCode: 200,
+                    statusCode: 500,
                     body: JSON.stringify({
-                        message: 'ERRO',
+                        message: 'Something went wrong',
                     }),
                 };
         }

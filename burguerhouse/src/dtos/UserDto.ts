@@ -1,7 +1,8 @@
-import { Prisma, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { UserCreateModel } from '../models/user/UserCreateModel';
 import { UserUpdateModel } from '../models/user/UserUpdateModel';
-import { UserModel } from '../models/user/UserModel';
+import { UserResponseModel } from '../models/user/UserResponseModel';
+import { UserPrismaModel } from '../models/user/UserPrismaModel';
 
 export class UserDto {
     static convertUserCreateModelToPrismaModel(user: UserCreateModel): Prisma.UserCreateInput {
@@ -19,27 +20,25 @@ export class UserDto {
         };
     }
 
-    static convertPrismaModelToUserModel(user: User | null): UserModel {
-        if (!user) return {} as UserModel;
+    static convertPrismaModelToUserModel(user: UserPrismaModel | null): UserResponseModel {
+        if (!user) return {} as UserResponseModel;
 
         return {
             id: user.id,
             name: user.name,
             email: user.email,
             isEmployee: user.isEmployee,
-            createdAt: user.createdAt,
-            orders: [],
+            orders: user.orders,
         };
     }
 
-    static convertPrismaModelArrayToUserModelArray(users: User[]): UserModel[] {
-        return users.map((u) => ({
-            id: u.id,
-            name: u.name,
-            email: u.email,
-            isEmployee: u.isEmployee,
-            createdAt: u.createdAt,
-            orders: [],
+    static convertPrismaModelArrayToUserModelArray(users: UserPrismaModel[]): UserResponseModel[] {
+        return users.map((user) => ({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            isEmployee: user.isEmployee,
+            orders: user.orders,
         }));
     }
 }

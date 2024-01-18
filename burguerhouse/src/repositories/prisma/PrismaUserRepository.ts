@@ -1,13 +1,14 @@
-import { Prisma, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { IPrismaUserRepository } from '../../irepositories/prisma/IPrismaUserRepository';
+import { UserPrismaModel } from '../../models/user/UserPrismaModel';
 
 export class PrismaUserRepository implements IPrismaUserRepository {
-    async getAll(): Promise<User[]> {
+    async getAll(): Promise<UserPrismaModel[]> {
         return await prisma.user.findMany();
     }
 
-    async getById(id: string): Promise<User | null> {
+    async getById(id: string): Promise<UserPrismaModel | null> {
         const userFound = await prisma.user.findUnique({
             where: {
                 id,
@@ -17,7 +18,7 @@ export class PrismaUserRepository implements IPrismaUserRepository {
         return userFound;
     }
 
-    async update(id: string, updateData: Prisma.UserUpdateInput): Promise<User> {
+    async update(id: string, updateData: Prisma.UserUpdateInput): Promise<UserPrismaModel> {
         const updatedUser = await prisma.user.update({
             where: {
                 id,
@@ -28,7 +29,7 @@ export class PrismaUserRepository implements IPrismaUserRepository {
         return updatedUser;
     }
 
-    async create(newData: Prisma.UserCreateInput): Promise<User> {
+    async create(newData: Prisma.UserCreateInput): Promise<UserPrismaModel> {
         const createdUser = await prisma.user.create({
             data: {
                 ...newData,

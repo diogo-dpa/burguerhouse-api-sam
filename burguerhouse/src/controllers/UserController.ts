@@ -1,5 +1,5 @@
 import { IUserController } from '../icontrollers/IUserController';
-import { UserModel } from '../models/user/UserModel';
+import { UserResponseModel } from '../models/user/UserResponseModel';
 import { UserService } from '../services/UserService';
 import { ErrorHandler } from '../utils/ErrorHandler';
 
@@ -10,7 +10,7 @@ export class UserController implements IUserController {
         this.userService = _userService;
     }
 
-    async getAll(): Promise<UserModel[]> {
+    async getAll(): Promise<UserResponseModel[]> {
         try {
             const users = await this.userService.getAllUsers();
             return users;
@@ -19,7 +19,7 @@ export class UserController implements IUserController {
         }
     }
 
-    async getById(id: string): Promise<UserModel | null> {
+    async getById(id: string): Promise<UserResponseModel | null> {
         try {
             ErrorHandler.validateStringParameter(id);
 
@@ -30,7 +30,7 @@ export class UserController implements IUserController {
         }
     }
 
-    async update(id: string, body: string): Promise<UserModel> {
+    async update(id: string, body: string): Promise<UserResponseModel> {
         try {
             const { name, isEmployee } = JSON.parse(body);
 
@@ -49,7 +49,7 @@ export class UserController implements IUserController {
         }
     }
 
-    async create(body: string): Promise<UserModel> {
+    async create(body: string): Promise<UserResponseModel> {
         try {
             const { name, email, isEmployee } = JSON.parse(body);
 
