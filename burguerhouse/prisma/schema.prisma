@@ -39,13 +39,13 @@ model OrderItems {
 
   itemAmount Int
 
-  snack Snacks @relation(fields: [snackId], references: [id], onDelete: NoAction)
-  snackId String
+  snack Snacks? @relation(fields: [snackId], references: [id], onDelete: NoAction)
+  snackId String?
 
-  ingredient Ingredients @relation(fields: [ingredientId], references: [id], onDelete: NoAction)
-  ingredientId String
+  ingredient Ingredients? @relation(fields: [ingredientId], references: [id], onDelete: NoAction)
+  ingredientId String?
 
-  order Order @relation(fields: [orderId], references: [id])
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId String
 }
 
