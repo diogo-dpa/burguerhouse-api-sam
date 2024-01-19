@@ -14,7 +14,9 @@ export class OrderDto {
                 id: orderItem.id,
                 itemAmount: orderItem.itemAmount,
                 ingredientId: orderItem.ingredientId,
+                ingredient: orderItem.ingredient,
                 snackId: orderItem.snackId,
+                snack: orderItem.snack,
             })),
         };
     }
@@ -31,7 +33,9 @@ export class OrderDto {
                 id: orderItem.id,
                 itemAmount: orderItem.itemAmount,
                 ingredientId: orderItem.ingredientId,
+                ingredient: orderItem.ingredient,
                 snackId: orderItem.snackId,
+                snack: orderItem.snack,
             })),
         }));
     }

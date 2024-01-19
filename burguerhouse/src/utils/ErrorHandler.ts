@@ -5,6 +5,7 @@ export class ErrorHandler {
     public static snackNotFoundMessage = 'Snack not found';
     public static userNotFoundMessage = 'User not found';
     public static internalServerErrorMessage = 'Internal server error';
+    public static insufficientIngredientAmountMessage = 'Available ingredient amount is insufficient';
 
     constructor() {}
 

@@ -7,11 +7,18 @@ export class PrismaOrderRepository implements IPrismaOrderRepository {
     async getAll(): Promise<OrderPrismaModel[]> {
         const orders = await prisma.order.findMany({
             include: {
-                orderItems: true,
+                orderItems: {
+                    include: {
+                        ingredient: true,
+                        snack: true,
+                    },
+                },
             },
         });
 
-        return orders.map((order) => ({ ...order, totalPrice: Number(order.totalPrice) }));
+        return this.formatOrdersResponse(
+            orders.map((order) => ({ ...order, totalPrice: Number(order.totalPrice) })) as OrderPrismaModel[],
+        );
     }
 
     async getById(id: string): Promise<OrderPrismaModel | null> {
@@ -20,13 +27,21 @@ export class PrismaOrderRepository implements IPrismaOrderRepository {
                 id,
             },
             include: {
-                orderItems: true,
+                orderItems: {
+                    include: {
+                        ingredient: true,
+                        snack: true,
+                    },
+                },
             },
         });
 
         if (orderFound === null) return null;
 
-        return { ...orderFound, totalPrice: Number(orderFound.totalPrice) };
+        return this.formatOrderResponse({
+            ...orderFound,
+            totalPrice: Number(orderFound.totalPrice),
+        } as OrderPrismaModel);
     }
 
     async create(newData: OrderCreateModel): Promise<OrderPrismaModel> {
@@ -35,19 +50,25 @@ export class PrismaOrderRepository implements IPrismaOrderRepository {
                 orderDate: new Date(),
                 totalPrice: newData.totalPrice,
                 orderItems: {
-                    create: newData.orderItems.map((orderItem) => ({
-                        itemAmount: orderItem.itemAmount,
-                        ingredient: {
-                            connect: {
-                                id: orderItem.ingredientId,
-                            },
-                        },
-                        snack: {
-                            connect: {
-                                id: orderItem.snackId,
-                            },
-                        },
-                    })),
+                    create: newData.orderItems.map((orderItem) =>
+                        !!orderItem.ingredientId
+                            ? {
+                                  itemAmount: orderItem.itemAmount,
+                                  ingredient: {
+                                      connect: {
+                                          id: orderItem.ingredientId,
+                                      },
+                                  },
+                              }
+                            : {
+                                  itemAmount: orderItem.itemAmount,
+                                  snack: {
+                                      connect: {
+                                          id: orderItem.snackId,
+                                      },
+                                  },
+                              },
+                    ),
                 },
                 user: {
                     connect: {
@@ -56,10 +77,51 @@ export class PrismaOrderRepository implements IPrismaOrderRepository {
                 },
             },
             include: {
-                orderItems: true,
+                orderItems: {
+                    include: {
+                        ingredient: true,
+                        snack: true,
+                    },
+                },
             },
         });
 
-        return { ...createdOrder, totalPrice: Number(createdOrder.totalPrice) };
+        return this.formatOrderResponse({
+            ...createdOrder,
+            totalPrice: Number(createdOrder.totalPrice),
+        } as OrderPrismaModel);
+    }
+
+    // Private methods
+    private formatOrderResponse(order: OrderPrismaModel): OrderPrismaModel {
+        return {
+            ...order,
+            totalPrice: Number(order.totalPrice),
+            orderItems: order.orderItems.map((orderItem) => ({
+                ...orderItem,
+                ingredient: orderItem.ingredient
+                    ? { ...orderItem.ingredient, unitMoneyAmount: Number(orderItem.ingredient.unitMoneyAmount) }
+                    : null,
+                snack: orderItem.snack
+                    ? { ...orderItem.snack, unitMoneyAmount: Number(orderItem.snack.unitMoneyAmount) }
+                    : null,
+            })),
+        };
+    }
+
+    private formatOrdersResponse(orders: OrderPrismaModel[]): OrderPrismaModel[] {
+        return orders.map((order) => ({
+            ...order,
+            totalPrice: Number(order.totalPrice),
+            orderItems: order.orderItems.map((orderItem) => ({
+                ...orderItem,
+                ingredient: orderItem.ingredient
+                    ? { ...orderItem.ingredient, unitMoneyAmount: Number(orderItem.ingredient.unitMoneyAmount) }
+                    : null,
+                snack: orderItem.snack
+                    ? { ...orderItem.snack, unitMoneyAmount: Number(orderItem.snack.unitMoneyAmount) }
+                    : null,
+            })),
+        }));
     }
 }
