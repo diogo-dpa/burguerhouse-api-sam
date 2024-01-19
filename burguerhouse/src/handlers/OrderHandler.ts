@@ -6,13 +6,15 @@ import { ErrorHandler } from '../utils/ErrorHandler';
 import { PrismaIngredientRepository } from '../repositories/prisma/PrismaIngredientRepository';
 import { HTTPMethodEnum } from '../utils/commonEnums';
 import { PrismaSnacksRepository } from '../repositories/prisma/PrismaSnacksRepository';
+import { PrismaUserRepository } from '../repositories/prisma/PrismaUserRepository';
 
 export const lambdaOrderHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
         const orderRepository = new PrismaOrderRepository();
         const ingredientRepository = new PrismaIngredientRepository();
         const snackRepository = new PrismaSnacksRepository();
-        const orderService = new OrderService(orderRepository, snackRepository, ingredientRepository);
+        const userRepository = new PrismaUserRepository();
+        const orderService = new OrderService(orderRepository, snackRepository, ingredientRepository, userRepository);
         const orderController = new OrderController(orderService);
 
         const idParameter = event.pathParameters?.id ?? '';
