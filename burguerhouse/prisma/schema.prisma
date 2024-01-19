@@ -107,12 +107,12 @@ model MenuItems {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  menu Menus @relation(fields: [menuId], references: [id])
+  menu Menus @relation(fields: [menuId], references: [id], onDelete: Cascade)
   menuId String
 
-  snack Snacks @relation(fields: [snackId], references: [id], onDelete: NoAction)
-  snackId String
+  snack Snacks? @relation(fields: [snackId], references: [id], onDelete: NoAction)
+  snackId String?
 
-  ingredient Ingredients @relation(fields: [ingredientId], references: [id], onDelete: NoAction)
-  ingredientId String
+  ingredient Ingredients? @relation(fields: [ingredientId], references: [id], onDelete: NoAction)
+  ingredientId String?
 }
