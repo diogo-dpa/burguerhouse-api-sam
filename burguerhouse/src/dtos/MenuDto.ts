@@ -13,7 +13,9 @@ export class MenuDto {
                 id: menuItem.id,
                 menuId: menuItem.menuId,
                 ingredientId: menuItem.ingredientId,
+                ingredient: menuItem.ingredient ?? null,
                 snackId: menuItem.snackId,
+                snack: menuItem.snack ?? null,
             })),
         };
     }
@@ -29,7 +31,9 @@ export class MenuDto {
                 id: menuItem.id,
                 menuId: menuItem.menuId,
                 ingredientId: menuItem.ingredientId,
+                ingredient: menuItem.ingredient ?? null,
                 snackId: menuItem.snackId,
+                snack: menuItem.snack ?? null,
             })),
         }));
     }

@@ -6,11 +6,18 @@ import { MenuUpdateModel } from '../../models/menu/MenuUpdateModel';
 
 export class PrismaMenusRepository implements IPrismaMenusRepository {
     async getAll(): Promise<MenuPrismaModel[]> {
-        return await prisma.menus.findMany({
+        const allMenus = await prisma.menus.findMany({
             include: {
-                menuItems: true,
+                menuItems: {
+                    include: {
+                        ingredient: true,
+                        snack: true,
+                    },
+                },
             },
         });
+
+        return this.formatMenusResponse(allMenus as MenuPrismaModel[]);
     }
 
     async getById(id: string): Promise<MenuPrismaModel | null> {
@@ -19,11 +26,20 @@ export class PrismaMenusRepository implements IPrismaMenusRepository {
                 id,
             },
             include: {
-                menuItems: true,
+                menuItems: {
+                    include: {
+                        ingredient: true,
+                        snack: true,
+                    },
+                },
             },
         });
 
-        return menuFound;
+        console.log({ menu: JSON.stringify(menuFound) });
+
+        if (!menuFound) return null;
+
+        return this.formatMenuResponse(menuFound as MenuPrismaModel);
     }
 
     async update(id: string, updateData: MenuUpdateModel): Promise<MenuPrismaModel> {
@@ -35,26 +51,36 @@ export class PrismaMenusRepository implements IPrismaMenusRepository {
                 description: updateData.description,
                 menuItems: {
                     deleteMany: {},
-                    create: updateData.menuItems?.map((menuItem) => ({
-                        ingredient: {
-                            connect: {
-                                id: menuItem.ingredientId,
-                            },
-                        },
-                        snack: {
-                            connect: {
-                                id: menuItem.snackId,
-                            },
-                        },
-                    })),
+                    create: updateData.menuItems?.map((menuItem) =>
+                        !!menuItem.ingredientId
+                            ? {
+                                  ingredient: {
+                                      connect: {
+                                          id: menuItem.ingredientId,
+                                      },
+                                  },
+                              }
+                            : {
+                                  snack: {
+                                      connect: {
+                                          id: menuItem.snackId,
+                                      },
+                                  },
+                              },
+                    ),
                 },
             },
             include: {
-                menuItems: true,
+                menuItems: {
+                    include: {
+                        ingredient: true,
+                        snack: true,
+                    },
+                },
             },
         });
 
-        return updatedMenu;
+        return this.formatMenuResponse(updatedMenu as MenuPrismaModel);
     }
 
     async create(newData: MenuCreateModel): Promise<MenuPrismaModel> {
@@ -63,26 +89,36 @@ export class PrismaMenusRepository implements IPrismaMenusRepository {
                 name: newData.name,
                 description: newData.description,
                 menuItems: {
-                    create: newData.menuItems?.map((menuItem) => ({
-                        ingredient: {
-                            connect: {
-                                id: menuItem.ingredientId,
-                            },
-                        },
-                        snack: {
-                            connect: {
-                                id: menuItem.snackId,
-                            },
-                        },
-                    })),
+                    create: newData.menuItems?.map((menuItem) =>
+                        !!menuItem.ingredientId
+                            ? {
+                                  ingredient: {
+                                      connect: {
+                                          id: menuItem.ingredientId,
+                                      },
+                                  },
+                              }
+                            : {
+                                  snack: {
+                                      connect: {
+                                          id: menuItem.snackId,
+                                      },
+                                  },
+                              },
+                    ),
                 },
             },
             include: {
-                menuItems: true,
+                menuItems: {
+                    include: {
+                        ingredient: true,
+                        snack: true,
+                    },
+                },
             },
         });
 
-        return createdMenu;
+        return this.formatMenuResponse(createdMenu as MenuPrismaModel);
     }
 
     async delete(id: string): Promise<void> {
@@ -91,5 +127,25 @@ export class PrismaMenusRepository implements IPrismaMenusRepository {
                 id,
             },
         });
+    }
+
+    // Private methods
+    private formatMenuResponse(menu: MenuPrismaModel): MenuPrismaModel {
+        return {
+            ...menu,
+            menuItems: menu.menuItems.map((menuItem) => ({
+                ...menuItem,
+                snack: menuItem.snack
+                    ? { ...menuItem.snack, unitMoneyAmount: Number(menuItem.snack?.unitMoneyAmount) }
+                    : null,
+                ingredient: menuItem.ingredient
+                    ? { ...menuItem.ingredient, unitMoneyAmount: Number(menuItem.ingredient?.unitMoneyAmount) }
+                    : null,
+            })),
+        } as MenuPrismaModel;
+    }
+
+    private formatMenusResponse(menus: MenuPrismaModel[]): MenuPrismaModel[] {
+        return menus.map((menu) => this.formatMenuResponse(menu)) as MenuPrismaModel[];
     }
 }

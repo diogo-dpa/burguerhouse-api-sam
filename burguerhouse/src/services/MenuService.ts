@@ -26,23 +26,7 @@ export class MenuService implements IMenuService {
     async createMenu(newMenu: MenuCreateModel): Promise<MenuResponseModel> {
         const { menuItems } = newMenu;
 
-        const ingredientIdFromMenuItems = menuItems.map((menuItem) => menuItem.ingredientId);
-        const snackIdFromMenuItems = menuItems.map((menuItem) => menuItem.snackId);
-
-        const ingredientPromise = ingredientIdFromMenuItems
-            .filter((ingredientId) => !!ingredientId)
-            .map((ingredientId) => this.ingredientRepository.getById(ingredientId ?? ''));
-
-        const snackPromise = snackIdFromMenuItems
-            .filter((snackId) => !!snackId)
-            .map((snackId) => this.snackRepository.getById(snackId ?? ''));
-
-        const [ingredients, snacks] = await Promise.all([ingredientPromise, snackPromise]);
-
-        if (ingredients.some((ingredient) => ingredient === null))
-            throw new Error(ErrorHandler.ingredientNotFoundMessage);
-
-        if (snacks.some((snack) => snack === null)) throw new Error(ErrorHandler.snackNotFoundMessage);
+        await this.validateIFSnacksAndIngredientsExistsFromMenuItems(menuItems);
 
         const menu = await this.menuRepository.create(newMenu);
         return MenuDto.convertPrismaModelToMenuModel(menu);
@@ -87,5 +71,26 @@ export class MenuService implements IMenuService {
 
     async deleteMenuById(menuId: string): Promise<void> {
         await this.menuRepository.delete(menuId);
+    }
+
+    //Private methods
+    private async validateIFSnacksAndIngredientsExistsFromMenuItems(menuItems: MenuCreateModel['menuItems']) {
+        const ingredientIdFromMenuItems = menuItems.map((menuItem) => menuItem.ingredientId);
+        const snackIdFromMenuItems = menuItems.map((menuItem) => menuItem.snackId);
+
+        const ingredientPromise = ingredientIdFromMenuItems
+            .filter((ingredientId) => !!ingredientId)
+            .map((ingredientId) => this.ingredientRepository.getById(ingredientId ?? ''));
+
+        const snackPromise = snackIdFromMenuItems
+            .filter((snackId) => !!snackId)
+            .map((snackId) => this.snackRepository.getById(snackId ?? ''));
+
+        const [ingredients, snacks] = await Promise.all([ingredientPromise, snackPromise]);
+
+        if (ingredients.some((ingredient) => ingredient === null))
+            throw new Error(ErrorHandler.ingredientNotFoundMessage);
+
+        if (snacks.some((snack) => snack === null)) throw new Error(ErrorHandler.snackNotFoundMessage);
     }
 }

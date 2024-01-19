@@ -1,13 +1,21 @@
+import { IngredientResponseModel } from '../ingredient/IngredientResponseModel';
+import { SnackResponseModel } from '../snack/SnackResponseModel';
+
 export class MenuItemResponseModel {
     id: string;
     menuId: string;
-    snackId?: string;
-    ingredientId?: string;
+    snack: SnackResponseModel | null;
+    ingredient?: IngredientResponseModel | null;
 
-    constructor(_id: string, _menuId: string, _snackId: string, _ingredientId: string) {
+    constructor(
+        _id: string,
+        _menuId: string,
+        _snack: SnackResponseModel | null,
+        _ingredient: IngredientResponseModel | null,
+    ) {
         this.id = _id;
         this.menuId = _menuId;
-        this.snackId = _snackId;
-        this.ingredientId = _ingredientId;
+        this.snack = _snack;
+        this.ingredient = _ingredient;
     }
 }
