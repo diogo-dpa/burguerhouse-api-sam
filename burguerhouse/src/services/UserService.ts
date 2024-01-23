@@ -4,6 +4,8 @@ import { UserResponseModel } from '../models/user/UserResponseModel';
 import { UserUpdateModel } from '../models/user/UserUpdateModel';
 import { PrismaUserRepository } from '../repositories/prisma/PrismaUserRepository';
 import { UserDto } from '../dtos/UserDto';
+import { ErrorHandler } from '../utils/ErrorHandler';
+import { JsonAPIQueryOptions } from '../utils/jsonapi/typesJsonapi';
 
 export class UserService implements IUserService {
     private userRepository: PrismaUserRepository;
@@ -20,25 +22,36 @@ export class UserService implements IUserService {
     }
 
     async updateUser(userId: string, user: UserUpdateModel): Promise<UserResponseModel> {
+        const foundUser = await this.userRepository.getById(userId);
+
+        if (!foundUser) throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.userNotFoundMessage));
+
         const formattedUser = UserDto.convertUserUpdateModelToPrismaModel(user);
         const updatedUser = await this.userRepository.update(userId, formattedUser);
 
         return UserDto.convertPrismaModelToUserModel(updatedUser);
     }
 
-    async getAllUsers(): Promise<UserResponseModel[]> {
-        const allUsers = await this.userRepository.getAll();
+    async getAllUsers(queryOptions?: JsonAPIQueryOptions): Promise<UserResponseModel[]> {
+        const { sort, include, page, fields } = queryOptions ?? {};
+
+        const allUsers = await this.userRepository.getAll({ sort, include, page, fields });
 
         return UserDto.convertPrismaModelArrayToUserModelArray(allUsers);
     }
 
-    async getUserById(userId: string): Promise<UserResponseModel | null> {
-        const foundUser = await this.userRepository.getById(userId);
+    async getUserById(userId: string, queryOptions?: JsonAPIQueryOptions): Promise<UserResponseModel | null> {
+        const { sort, include, page, fields } = queryOptions ?? {};
+        const foundUser = await this.userRepository.getById(userId, { sort, include, page, fields });
 
         return UserDto.convertPrismaModelToUserModel(foundUser);
     }
 
     async deleteUserById(userId: string): Promise<void> {
+        const foundUser = await this.userRepository.getById(userId);
+
+        if (!foundUser) throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.userNotFoundMessage));
+
         await this.userRepository.delete(userId);
     }
 }

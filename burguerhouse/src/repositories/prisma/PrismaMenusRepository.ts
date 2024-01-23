@@ -35,8 +35,6 @@ export class PrismaMenusRepository implements IPrismaMenusRepository {
             },
         });
 
-        console.log({ menu: JSON.stringify(menuFound) });
-
         if (!menuFound) return null;
 
         return this.formatMenuResponse(menuFound as MenuPrismaModel);

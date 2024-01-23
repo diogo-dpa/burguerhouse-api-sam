@@ -1,9 +1,3 @@
-import { UserResponseModel } from '../models/user/UserResponseModel';
+import { IBaseController } from './IBaseController';
 
-export interface IUserController {
-    getAll: () => Promise<UserResponseModel[]>;
-    getById: (id: string) => Promise<UserResponseModel | null>;
-    update: (id: string, body: Partial<string>) => Promise<UserResponseModel>;
-    create: (body: string) => Promise<UserResponseModel>;
-    delete: (id: string) => Promise<void>;
-}
+export type IUserController = IBaseController;

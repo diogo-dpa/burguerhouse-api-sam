@@ -1,7 +1,11 @@
-export interface IBaseController<T> {
-    getAll: () => Promise<T>;
-    getById: (id: number) => Promise<T>;
-    update: (id: number, updateData: Partial<T>) => Promise<T>;
-    create: (newData: T) => Promise<T>;
-    delete: (id: number) => Promise<T>;
+import { ControllerOptions } from '../controllers/utilsController';
+import { ControllerResponseJsonAPI } from '../utils/jsonapi/typesJsonapi';
+
+export interface IBaseController {
+    getAll: (controllerOptions: ControllerOptions) => Promise<ControllerResponseJsonAPI>;
+    getById: (controllerOptions: ControllerOptions) => Promise<ControllerResponseJsonAPI>;
+    getRelationshipById: (controllerOptions: ControllerOptions) => Promise<ControllerResponseJsonAPI>;
+    update: (controllerOptions: ControllerOptions) => Promise<ControllerResponseJsonAPI>;
+    create: (controllerOptions: ControllerOptions) => Promise<ControllerResponseJsonAPI>;
+    delete: (controllerOptions: ControllerOptions) => Promise<ControllerResponseJsonAPI>;
 }

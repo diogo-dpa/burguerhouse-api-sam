@@ -2,20 +2,51 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { IPrismaUserRepository } from '../../irepositories/prisma/IPrismaUserRepository';
 import { UserPrismaModel } from '../../models/user/UserPrismaModel';
+import { OrderPrismaModel } from '../../models/order/OrderPrismaModel';
+import { JsonAPIQueryOptions } from '../../utils/jsonapi/typesJsonapi';
 
 export class PrismaUserRepository implements IPrismaUserRepository {
-    async getAll(): Promise<UserPrismaModel[]> {
-        return await prisma.user.findMany();
+    async getAll(queryOptions?: JsonAPIQueryOptions): Promise<UserPrismaModel[]> {
+        const { sort, include } = queryOptions ?? {};
+        const allUsers = await prisma.user.findMany({
+            orderBy: [...(sort ?? [])],
+            include: {
+                ...(include ?? {}),
+            },
+        });
+
+        return allUsers.map((user) => ({
+            ...user,
+            orders:
+                (user?.orders?.map((order) => ({
+                    ...order,
+                    totalPrice: Number(order.totalPrice),
+                })) as OrderPrismaModel[]) ?? [],
+        }));
     }
 
-    async getById(id: string): Promise<UserPrismaModel | null> {
+    async getById(id: string, queryOptions?: JsonAPIQueryOptions): Promise<UserPrismaModel | null> {
+        const { include } = queryOptions ?? {};
+
         const userFound = await prisma.user.findUnique({
             where: {
                 id,
             },
+            include: {
+                ...(include ?? {}),
+            },
         });
 
-        return userFound;
+        if (!userFound) return null;
+
+        return {
+            ...userFound,
+            orders:
+                (userFound?.orders?.map((order) => ({
+                    ...order,
+                    totalPrice: Number(order.totalPrice),
+                })) as OrderPrismaModel[]) ?? [],
+        };
     }
 
     async update(id: string, updateData: Prisma.UserUpdateInput): Promise<UserPrismaModel> {

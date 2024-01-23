@@ -8,16 +8,16 @@ export class OrderDto {
         return {
             id: order.id,
             totalPrice: order.totalPrice,
-            userId: order.userId,
             orderDate: order.orderDate,
-            orderItems: order.orderItems.map((orderItem) => ({
-                id: orderItem.id,
-                itemAmount: orderItem.itemAmount,
-                ingredientId: orderItem.ingredientId,
-                ingredient: orderItem.ingredient,
-                snackId: orderItem.snackId,
-                snack: orderItem.snack,
-            })),
+            orderItems:
+                order.orderItems?.map((orderItem) => ({
+                    id: orderItem.id,
+                    itemAmount: orderItem.itemAmount,
+                    ingredientId: orderItem.ingredientId,
+                    ingredient: orderItem.ingredient,
+                    snackId: orderItem.snackId,
+                    snack: orderItem.snack,
+                })) ?? undefined,
         };
     }
 
@@ -27,16 +27,16 @@ export class OrderDto {
         return orders.map((order) => ({
             id: order.id,
             totalPrice: order.totalPrice,
-            userId: order.userId,
             orderDate: order.orderDate,
-            orderItems: order.orderItems.map((orderItem) => ({
-                id: orderItem.id,
-                itemAmount: orderItem.itemAmount,
-                ingredientId: orderItem.ingredientId,
-                ingredient: orderItem.ingredient,
-                snackId: orderItem.snackId,
-                snack: orderItem.snack,
-            })),
+            orderItems:
+                order.orderItems?.map((orderItem) => ({
+                    id: orderItem.id,
+                    itemAmount: orderItem.itemAmount,
+                    ingredientId: orderItem.ingredientId,
+                    ingredient: orderItem.ingredient,
+                    snackId: orderItem.snackId,
+                    snack: orderItem.snack,
+                })) ?? undefined,
         }));
     }
 }

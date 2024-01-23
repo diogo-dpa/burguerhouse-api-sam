@@ -3,6 +3,7 @@ import { UserCreateModel } from '../models/user/UserCreateModel';
 import { UserUpdateModel } from '../models/user/UserUpdateModel';
 import { UserResponseModel } from '../models/user/UserResponseModel';
 import { UserPrismaModel } from '../models/user/UserPrismaModel';
+import { OrderDto } from './OrderDto';
 
 export class UserDto {
     static convertUserCreateModelToPrismaModel(user: UserCreateModel): Prisma.UserCreateInput {
@@ -28,7 +29,7 @@ export class UserDto {
             name: user.name,
             email: user.email,
             isEmployee: user.isEmployee,
-            orders: user.orders,
+            orders: !!user.orders?.length ? OrderDto.convertPrismaModelArrayToMenuModelArray(user.orders) : [],
         };
     }
 
@@ -38,7 +39,7 @@ export class UserDto {
             name: user.name,
             email: user.email,
             isEmployee: user.isEmployee,
-            orders: user.orders,
+            orders: !!user.orders?.length ? OrderDto.convertPrismaModelArrayToMenuModelArray(user.orders) : [],
         }));
     }
 }

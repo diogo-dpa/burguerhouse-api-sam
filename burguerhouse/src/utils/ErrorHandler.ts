@@ -1,3 +1,5 @@
+import { StatusCodeEnum } from './commonEnums';
+
 /* eslint-disable @typescript-eslint/no-empty-function */
 export class ErrorHandler {
     public static invalidParametersMessage = 'Invalid params';
@@ -8,6 +10,10 @@ export class ErrorHandler {
     public static insufficientIngredientAmountMessage = 'Available ingredient amount is insufficient';
 
     constructor() {}
+
+    static returnNotFoundCustomError(message: string): string {
+        return `${StatusCodeEnum.badRequest} - ${message}`;
+    }
 
     static validateStringParameter(parameter: string): void {
         if (parameter === null || parameter === undefined || !parameter.length || typeof parameter !== 'string')
