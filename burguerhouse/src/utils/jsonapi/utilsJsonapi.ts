@@ -18,3 +18,18 @@ export function mapRelationTypeToModelType(relationType: JsonAPIProjectTypesEnum
             return '';
     }
 }
+
+export function convertNestedObjectIntoArray(obj: object): string[] {
+    const ref = Object.entries(obj);
+
+    if (!ref.length) return [];
+
+    return ref.reduce((acm: string[], item) => {
+        const refKey = item[0];
+        const refValue = item[1];
+
+        if (refKey === 'include') return [...acm, ...convertNestedObjectIntoArray(refValue)];
+
+        return [...acm, [refKey, ...convertNestedObjectIntoArray(refValue)].join('.')];
+    }, []);
+}

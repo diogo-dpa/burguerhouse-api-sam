@@ -5,18 +5,19 @@ import {
     JsonAPIBodyErrorResponse,
     JsonAPIBodyResponse,
     JsonAPIBodyResponseArray,
+    JsonAPIProjectTypesEnum,
     MountSuccessResponseType,
+    RelationshipType,
 } from './typesJsonapi';
 import { mapRelationTypeToModelType } from './utilsJsonapi';
 
 export class JSONAPIHandler {
-    public static badRequestDescription = 'Bad Request';
     private contentType = 'application/vnd.api+json';
 
     private readonly availableDataPrimaryKeys: string[] = ['data', 'meta', 'links', 'included', 'errors', 'jsonapi'];
     private readonly availableQueryParams: string[] = ['include', 'fields', 'sort', 'page', 'filter'];
 
-    private readonly commonJsonAPI = {
+    private readonly commonJsonAPI: Record<string, string | string[]> = {
         version: '1.0',
         authors: ['Diogo Almazan'],
     };
@@ -49,13 +50,21 @@ export class JSONAPIHandler {
 
         const dataBodyId = body?.id ?? '';
 
+        const { relations } = relationships ?? {};
+
+        const firstLevelRelations = relations?.map((relation) => relation.split('.')[0]) ?? [];
+
         const bodyWithoutId: Record<string, any> | null = body
             ? Object.fromEntries(
                   Object.entries(body).filter(
                       ([key]) =>
                           key !== 'id' &&
-                          key !== 'type' &&
-                          (!relationships?.type || key !== mapRelationTypeToModelType(relationships.type)),
+                          (!relations ||
+                              !firstLevelRelations
+                                  .map((relation) =>
+                                      mapRelationTypeToModelType(relation as JsonAPIProjectTypesEnum).toString(),
+                                  )
+                                  .includes(key)),
                   ),
               )
             : null;
@@ -68,34 +77,7 @@ export class JSONAPIHandler {
                       attributes: {
                           ...(bodyWithoutId as T),
                       },
-                      relationships: relationships
-                          ? {
-                                [relationships.type]: {
-                                    links: {
-                                        self: `http://localhost:3000/${mapRelationTypeToModelType(
-                                            options.type,
-                                        )}/${dataBodyId}/relationships/${relationships.type}`,
-                                        related: `http://localhost:3000/${mapRelationTypeToModelType(
-                                            options.type,
-                                        )}/${dataBodyId}/${relationships.type}`,
-                                    },
-                                    data:
-                                        relationships.includeData && body
-                                            ? body[mapRelationTypeToModelType(relationships.type)].map(
-                                                  (relation: any) => ({
-                                                      id: relation.id,
-                                                      type: relationships.type,
-                                                      attributes: {
-                                                          ...Object.fromEntries(
-                                                              Object.entries(relation).filter(([key]) => key !== 'id'),
-                                                          ),
-                                                      },
-                                                  }),
-                                              )
-                                            : undefined,
-                                },
-                            }
-                          : undefined,
+                      relationships: this.getRelationships(relationships, options.type, body),
                   }
                 : null,
             links: {
@@ -130,35 +112,15 @@ export class JSONAPIHandler {
                               ([key]) =>
                                   key !== 'id' &&
                                   key !== 'type' &&
-                                  (!relationships?.type || key !== mapRelationTypeToModelType(relationships.type)),
+                                  (!relationships ||
+                                      key !==
+                                          mapRelationTypeToModelType(
+                                              relationships.relations[0] as JsonAPIProjectTypesEnum,
+                                          )),
                           ),
                       ),
                   },
-                  relationships: relationships
-                      ? {
-                            [relationships.type]: {
-                                links: {
-                                    self: `http://localhost:3000/${mapRelationTypeToModelType(options.type)}/${
-                                        item.id
-                                    }/relationships/${relationships.type}`,
-                                    related: `http://localhost:3000/${mapRelationTypeToModelType(options.type)}/${
-                                        item.id
-                                    }/${relationships.type}`,
-                                },
-                                data: relationships.includeData
-                                    ? item[mapRelationTypeToModelType(relationships.type)].map((relation: any) => ({
-                                          id: relation.id,
-                                          type: relationships.type,
-                                          attributes: {
-                                              ...Object.fromEntries(
-                                                  Object.entries(relation).filter(([key]) => key !== 'id'),
-                                              ),
-                                          },
-                                      }))
-                                    : undefined,
-                            },
-                        }
-                      : null,
+                  relationships: this.getRelationships(relationships, options.type, item),
               }))
             : ([] as JsonAPIBodyDataType<any>[]);
 
@@ -176,6 +138,44 @@ export class JSONAPIHandler {
             statusCode: statusCode,
             body: JSON.stringify(response),
         };
+    }
+
+    private getRelationships(
+        relationships: RelationshipType | null,
+        parentType: JsonAPIProjectTypesEnum,
+        body: Record<string, any> | null | undefined,
+    ): Record<string, any> | undefined {
+        if (!relationships) return undefined;
+
+        return relationships.relations.reduce((acm: Record<string, any>, relation: string) => {
+            return {
+                ...acm,
+                [relation]: {
+                    links: {
+                        self: `http://localhost:3000/${mapRelationTypeToModelType(parentType)}/${
+                            body?.id
+                        }/relationships/${mapRelationTypeToModelType(relation as JsonAPIProjectTypesEnum)}`,
+                        related: `http://localhost:3000/${mapRelationTypeToModelType(parentType)}/${
+                            body?.id
+                        }/${mapRelationTypeToModelType(relation as JsonAPIProjectTypesEnum)}`,
+                    },
+                    data:
+                        relationships.includeData && body
+                            ? body[mapRelationTypeToModelType(relation as JsonAPIProjectTypesEnum)].map(
+                                  (relation: any) => ({
+                                      id: relation.id,
+                                      type: relation,
+                                      attributes: {
+                                          ...Object.fromEntries(
+                                              Object.entries(relation).filter(([key]) => key !== 'id'),
+                                          ),
+                                      },
+                                  }),
+                              )
+                            : undefined,
+                },
+            };
+        }, {});
     }
 
     public mountSuccessResponseRelationshipArray<T>({
@@ -216,10 +216,13 @@ export class JSONAPIHandler {
                     status: StatusCodeEnum.forbidden,
                     title: 'Forbidden',
                     detail: `Unsupported request according to the current state of the resource.${
-                        errorMessage ? 'Detail: ' + errorMessage : ''
+                        errorMessage ? ' Detail: ' + errorMessage : ''
                     }`,
                 },
             ],
+            jsonapi: {
+                ...this.commonJsonAPI,
+            },
         };
 
         return {
@@ -228,21 +231,46 @@ export class JSONAPIHandler {
         };
     }
 
-    public mountErrorResponseNotFound(errorMessage?: string): ControllerResponseJsonAPI {
+    public mountErrorResponseBadRequest(errorMessage?: string): ControllerResponseJsonAPI {
         const errorResponse: JsonAPIBodyErrorResponse = {
             errors: [
                 {
                     status: StatusCodeEnum.badRequest,
-                    title: 'Not Found',
-                    detail: `The related resource does not exist. Ensure sending the right parameters.${
-                        errorMessage ? 'Detail: ' + errorMessage : ''
+                    title: 'Bad Request',
+                    detail: `The request is not appropriate to the API rules. Ensure sending the right parameters.${
+                        errorMessage ? ' Detail: ' + errorMessage : ''
                     }`,
                 },
             ],
+            jsonapi: {
+                ...this.commonJsonAPI,
+            },
         };
 
         return {
             statusCode: StatusCodeEnum.badRequest,
+            body: JSON.stringify(errorResponse),
+        };
+    }
+
+    public mountErrorResponseNotFound(errorMessage?: string): ControllerResponseJsonAPI {
+        const errorResponse: JsonAPIBodyErrorResponse = {
+            errors: [
+                {
+                    status: StatusCodeEnum.notFound,
+                    title: 'Not Found',
+                    detail: `The related resource does not exist. Ensure sending the right parameters.${
+                        errorMessage ? ' Detail: ' + errorMessage : ''
+                    }`,
+                },
+            ],
+            jsonapi: {
+                ...this.commonJsonAPI,
+            },
+        };
+
+        return {
+            statusCode: StatusCodeEnum.notFound,
             body: JSON.stringify(errorResponse),
         };
     }
@@ -254,10 +282,13 @@ export class JSONAPIHandler {
                     status: StatusCodeEnum.conflict,
                     title: 'Conflict',
                     detail: `The request violets the server constraints.${
-                        errorMessage ? 'Detail: ' + errorMessage : ''
+                        errorMessage ? ' Detail: ' + errorMessage : ''
                     }`,
                 },
             ],
+            jsonapi: {
+                ...this.commonJsonAPI,
+            },
         };
 
         return {
@@ -273,10 +304,13 @@ export class JSONAPIHandler {
                     status: StatusCodeEnum.unsuporttedMediaType,
                     title: 'Unsupported Media Type',
                     detail: `The request is not appropriate accordingly to the server rules.${
-                        errorMessage ? 'Detail: ' + errorMessage : ''
+                        errorMessage ? ' Detail: ' + errorMessage : ''
                     }`,
                 },
             ],
+            jsonapi: {
+                ...this.commonJsonAPI,
+            },
         };
 
         return {
@@ -292,10 +326,13 @@ export class JSONAPIHandler {
                     status: StatusCodeEnum.internalServerError,
                     title: 'Internal server error',
                     detail: `An unexpected error occured during the proccess.${
-                        errorMessage ? 'Detail: ' + errorMessage : ''
+                        errorMessage ? ' Detail: ' + errorMessage : ''
                     }`,
                 },
             ],
+            jsonapi: {
+                ...this.commonJsonAPI,
+            },
         };
 
         return {

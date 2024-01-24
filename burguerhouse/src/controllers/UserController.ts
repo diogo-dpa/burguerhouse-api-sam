@@ -19,13 +19,7 @@ export class UserController implements IUserController {
     private userService: UserService;
     private jsonAPIHandler: JSONAPIHandler;
     private jsonAPIRoute = 'users';
-    private usersRelations = ['orders', 'orderItems'];
-    private returnUserRelationshipsLinks(id: string) {
-        return {
-            self: `http://localhost:3000/users/${id}/relationships/orders`,
-            related: `http://localhost:3000/users/${id}/orders`,
-        };
-    }
+    private usersRelations = [JsonAPIProjectTypesEnum.order];
 
     constructor(_userService: UserService) {
         this.userService = _userService;
@@ -40,8 +34,7 @@ export class UserController implements IUserController {
             if (!this.jsonAPIHandler.validateContentType(header))
                 return this.jsonAPIHandler.mountErrorResponseUnsupportedMediaType();
 
-            if (include && Object.keys(include).some((key) => !this.usersRelations.includes(key)))
-                return this.jsonAPIHandler.mountErrorResponseNotFound();
+            if (include || fields || page) return this.jsonAPIHandler.mountErrorResponseBadRequest();
 
             const users = await this.userService.getAllUsers({ sort, fields, include, page });
 
@@ -49,8 +42,7 @@ export class UserController implements IUserController {
                 options: { type: JsonAPIProjectTypesEnum.people, linkSelf: this.jsonAPIRoute },
                 body: users,
                 relationships: {
-                    type: JsonAPIProjectTypesEnum.order,
-                    includeData: include && Object.keys(include).some((key) => this.usersRelations.includes(key)),
+                    relations: [...this.usersRelations],
                 },
             });
         } catch (error: any) {
@@ -62,13 +54,12 @@ export class UserController implements IUserController {
         try {
             const { pathParameter, queryParameter } = params ?? {};
             const { id } = pathParameter ?? {};
-            const { include, fields }: JsonAPIQueryOptions = queryParameter ?? {};
+            const { include, fields, page }: JsonAPIQueryOptions = queryParameter ?? {};
 
             if (!this.jsonAPIHandler.validateContentType(header))
                 return this.jsonAPIHandler.mountErrorResponseUnsupportedMediaType();
 
-            if (include && Object.keys(include).some((key) => !this.usersRelations.includes(key)))
-                return this.jsonAPIHandler.mountErrorResponseNotFound();
+            if (include || fields || page) return this.jsonAPIHandler.mountErrorResponseBadRequest();
 
             const formattedId = id ?? '';
 
@@ -80,8 +71,7 @@ export class UserController implements IUserController {
                 options: { type: JsonAPIProjectTypesEnum.people, linkSelf: `${this.jsonAPIRoute}/${id}` },
                 body: user,
                 relationships: {
-                    type: JsonAPIProjectTypesEnum.order,
-                    includeData: include && Object.keys(include).some((key) => this.usersRelations.includes(key)),
+                    relations: [...this.usersRelations],
                 },
             });
         } catch (error: any) {
@@ -93,7 +83,7 @@ export class UserController implements IUserController {
         try {
             const { pathParameter, queryParameter } = params ?? {};
             const { id } = pathParameter ?? {};
-            const { include }: JsonAPIQueryOptions = queryParameter ?? {};
+            const { include, fields, filter, page }: JsonAPIQueryOptions = queryParameter ?? {};
 
             if (!this.jsonAPIHandler.validateContentType(header))
                 return this.jsonAPIHandler.mountErrorResponseUnsupportedMediaType();
@@ -103,9 +93,7 @@ export class UserController implements IUserController {
             if (!ErrorHandler.validateStringParameterReturningBool(formattedId))
                 return this.jsonAPIHandler.mountErrorResponseForbidden();
 
-            if (include && Object.keys(include).some((key) => !this.usersRelations.includes(key))) {
-                return this.jsonAPIHandler.mountErrorResponseNotFound();
-            }
+            if (include || fields || filter || page) return this.jsonAPIHandler.mountErrorResponseBadRequest();
 
             const user = await this.userService.getUserById(formattedId, {
                 include: {
@@ -161,8 +149,7 @@ export class UserController implements IUserController {
                 options: { type: JsonAPIProjectTypesEnum.people, linkSelf: `${this.jsonAPIRoute}/${user.id}` },
                 body: user,
                 relationships: {
-                    type: JsonAPIProjectTypesEnum.order,
-                    links: this.returnUserRelationshipsLinks(user.id),
+                    relations: [...this.usersRelations],
                 },
             });
         } catch (error: any) {
@@ -205,8 +192,7 @@ export class UserController implements IUserController {
                 options: { type: JsonAPIProjectTypesEnum.people, linkSelf: `${this.jsonAPIRoute}/${user.id}` },
                 body: user,
                 relationships: {
-                    type: JsonAPIProjectTypesEnum.order,
-                    links: this.returnUserRelationshipsLinks(user.id),
+                    relations: [...this.usersRelations],
                 },
                 statusCode: 201,
             });

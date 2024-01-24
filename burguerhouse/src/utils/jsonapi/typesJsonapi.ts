@@ -24,13 +24,13 @@ export type JsonAPIBodyErrorType = {
 
 export type JsonAPIBodyErrorResponse = {
     errors: JsonAPIBodyErrorType[];
-};
+} & Omit<JsonAPIBodyResponse<any>, 'data'>;
 
 export type JsonAPIBodyDataType<T> = {
     type: string;
     id?: string;
     attributes: Omit<T, 'id'>;
-    relationships?: Record<string, JsonAPIBodyResponse<T>>;
+    relationships?: Record<string, any>;
     links?: Record<string, string>;
 };
 
@@ -57,7 +57,7 @@ export type ControllerResponseJsonAPI = {
     body?: string;
 };
 
-export type RelationshipType = { type: JsonAPIProjectTypesEnum; links?: Record<string, string>; includeData?: boolean };
+export type RelationshipType = { relations: string[]; includeData?: Record<string, boolean | object> | undefined };
 
 export type MountSuccessResponseType = {
     options: { type: JsonAPIProjectTypesEnum; linkSelf: string; baseLinkReference?: string };

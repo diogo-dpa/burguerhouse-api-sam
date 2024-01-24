@@ -8,7 +8,7 @@ export function defineErrorResponse(errorMessage: string): ControllerResponseJso
     const jsonAPIHandler = new JSONAPIHandler();
 
     switch (code) {
-        case StatusCodeEnum.badRequest.toString():
+        case StatusCodeEnum.notFound.toString():
             return jsonAPIHandler.mountErrorResponseNotFound(message);
         default:
         case StatusCodeEnum.internalServerError.toString():
