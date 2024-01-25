@@ -1,4 +1,4 @@
-import { ControllerOptions } from '../controllers/utilsController';
+import { ControllerOptions } from '../controllers/typesController';
 import { ControllerResponseJsonAPI } from '../utils/jsonapi/typesJsonapi';
 
 export interface IBaseController {

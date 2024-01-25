@@ -4,6 +4,8 @@ import { IngredientCreateModel } from '../models/ingredient/IngredientCreateMode
 import { IngredientResponseModel } from '../models/ingredient/IngredientResponseModel';
 import { IngredientUpdateModel } from '../models/ingredient/IngredientUpdateModel';
 import { PrismaIngredientRepository } from '../repositories/prisma/PrismaIngredientRepository';
+import { ErrorHandler } from '../utils/ErrorHandler';
+import { JsonAPIQueryOptions } from '../utils/jsonapi/typesJsonapi';
 
 export class IngredientService implements IIngredientService {
     private ingredientRepository: PrismaIngredientRepository;
@@ -19,22 +21,37 @@ export class IngredientService implements IIngredientService {
     }
 
     async updateIngredient(id: string, newIngredient: IngredientUpdateModel): Promise<IngredientResponseModel> {
+        const foundIngredient = await this.ingredientRepository.getById(id);
+        if (!foundIngredient)
+            throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.ingredientNotFoundMessage));
+
         const formattedIngredient = IngredientDto.converIngredientUpdateModelToPrismaModel(newIngredient);
         const ingredient = await this.ingredientRepository.update(id, formattedIngredient);
         return IngredientDto.convertIngredientsToIngredientsModel(ingredient);
     }
 
-    async getAllIngredients(): Promise<IngredientResponseModel[]> {
-        const ingredients = await this.ingredientRepository.getAll();
+    async getAllIngredients(queryOptions?: JsonAPIQueryOptions): Promise<IngredientResponseModel[]> {
+        const { sort, include, page, fields } = queryOptions ?? {};
+
+        const ingredients = await this.ingredientRepository.getAll({ sort, include, page, fields });
         return IngredientDto.convertIngredientsArrayToIngredientsModelArray(ingredients);
     }
 
-    async getIngredientById(IngredientId: string): Promise<IngredientResponseModel> {
-        const ingredient = await this.ingredientRepository.getById(IngredientId);
+    async getIngredientById(
+        IngredientId: string,
+        queryOptions?: JsonAPIQueryOptions,
+    ): Promise<IngredientResponseModel> {
+        const { sort, include, page, fields } = queryOptions ?? {};
+
+        const ingredient = await this.ingredientRepository.getById(IngredientId, { sort, include, page, fields });
         return IngredientDto.convertIngredientsToIngredientsModel(ingredient);
     }
 
-    async deleteIngredientById(IngredientId: string): Promise<void> {
-        await this.ingredientRepository.delete(IngredientId);
+    async deleteIngredientById(ingredientId: string): Promise<void> {
+        const foundIngredient = await this.ingredientRepository.getById(ingredientId);
+        if (!foundIngredient)
+            throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.ingredientNotFoundMessage));
+
+        await this.ingredientRepository.delete(ingredientId);
     }
 }

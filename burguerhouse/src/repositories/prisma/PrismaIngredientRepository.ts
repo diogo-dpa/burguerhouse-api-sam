@@ -2,20 +2,31 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 import { IPrismaIngredientRepository } from '../../irepositories/prisma/IPrismaIngredientRepository';
 import { IngredientPrismaModel } from '../../models/ingredient/IngredienPrismaModel';
+import { JsonAPIQueryOptions } from '../../utils/jsonapi/typesJsonapi';
 
 export class PrismaIngredientRepository implements IPrismaIngredientRepository {
-    async getAll(): Promise<IngredientPrismaModel[]> {
-        const ingredients = await prisma.ingredients.findMany();
+    async getAll(queryOptions?: JsonAPIQueryOptions): Promise<IngredientPrismaModel[]> {
+        const { sort, include } = queryOptions ?? {};
+        const ingredients = await prisma.ingredients.findMany({
+            orderBy: [...(sort ?? [])],
+            include: {
+                ...(include ?? {}),
+            },
+        });
         return ingredients.map((ingredient) => ({
             ...ingredient,
             unitMoneyAmount: Number(ingredient.unitMoneyAmount),
         }));
     }
 
-    async getById(id: string): Promise<IngredientPrismaModel | null> {
+    async getById(id: string, queryOptions?: JsonAPIQueryOptions): Promise<IngredientPrismaModel | null> {
+        const { include } = queryOptions ?? {};
         const ingredient = await prisma.ingredients.findUnique({
             where: {
                 id,
+            },
+            include: {
+                ...(include ?? {}),
             },
         });
 

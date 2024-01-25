@@ -12,7 +12,7 @@ export class ErrorHandler {
     constructor() {}
 
     static returnNotFoundCustomError(message: string): string {
-        return `${StatusCodeEnum.badRequest} - ${message}`;
+        return `${StatusCodeEnum.notFound} - ${message}`;
     }
 
     static validateStringParameter(parameter: string): void {

@@ -80,7 +80,7 @@ describe('UserService', () => {
 
             expect(async () => {
                 await userService.updateUser(userId, updatedUserFromRequest);
-            }).rejects.toThrow('400 - User not found');
+            }).rejects.toThrow('404 - User not found');
 
             expect(spyPrismaUserRepositoryGetById).toHaveBeenCalledTimes(1);
             expect(spyPrismaUserRepositoryGetById).toHaveBeenCalledWith(userId);
@@ -227,7 +227,7 @@ describe('UserService', () => {
 
             expect(async () => {
                 await userService.deleteUserById(userId);
-            }).rejects.toThrow('400 - User not found');
+            }).rejects.toThrow('404 - User not found');
 
             expect(spyPrismaUserRepositoryGetById).toHaveBeenCalledTimes(1);
             expect(spyPrismaUserRepositoryGetById).toHaveBeenCalledWith(userId);
