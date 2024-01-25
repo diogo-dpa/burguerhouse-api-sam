@@ -12,7 +12,7 @@ export type JsonAPIQueryOptions = {
     fields?: Record<string, string>[];
     sort?: Record<string, string>[];
     page?: Record<string, string>[];
-    filter?: string[];
+    filter?: Record<string, string>[];
 };
 
 export type JsonAPIBodyErrorType = {

@@ -1,13 +1,14 @@
 export function createNestedObj(obj: Record<string, object | boolean>, keyPath: string[], value: boolean) {
     const lastKeyIndex = keyPath.length - 1;
+    let objAux = { ...obj };
     for (let i = 0; i < lastKeyIndex; ++i) {
         const key = keyPath[i];
-        if (!(key in obj)) {
-            obj[key] = {};
+        if (!(key in objAux)) {
+            objAux[key] = {};
         }
-        obj = obj[key];
+        objAux = obj[key] as Record<string, object | boolean>;
     }
-    obj[keyPath[lastKeyIndex]] = value;
+    objAux[keyPath[lastKeyIndex]] = value;
 }
 
 export function formatQueryParameters(queryParameter: Record<string, any>): Record<string, any> {

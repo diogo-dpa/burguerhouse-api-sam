@@ -20,7 +20,7 @@ export class ErrorHandler {
             throw new Error(this.invalidParametersMessage);
     }
 
-    static validateStringParameterReturningBool(parameter: string): boolean {
+    static validateStringParameterReturningBool(parameter?: string | null): boolean {
         if (parameter === null || parameter === undefined || !parameter.length || typeof parameter !== 'string')
             return false;
 
@@ -32,7 +32,7 @@ export class ErrorHandler {
             throw new Error(this.invalidParametersMessage);
     }
 
-    static validateBooleanParameterReturningBool(parameter: boolean): boolean {
+    static validateBooleanParameterReturningBool(parameter?: boolean | null): boolean {
         if (parameter === null || parameter === undefined || typeof parameter !== 'boolean') return false;
         return true;
     }

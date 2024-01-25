@@ -1,5 +1,7 @@
+import { JsonAPIQueryOptions } from '../utils/jsonapi/typesJsonapi';
+
 export type PathRequestOptions = {
-    queryParameter?: Record<string, string>;
+    queryParameter?: JsonAPIQueryOptions;
     pathParameter?: Record<string, string>;
 };
 
