@@ -13,6 +13,7 @@ describe('UserService', () => {
         delete: jest.fn(),
         getAll: jest.fn(),
         getById: jest.fn(),
+        getByEmail: jest.fn(),
     };
 
     let spyPrismaUserRepositoryCreate: jest.SpiedFunction<typeof prismaUserRepository.create>;

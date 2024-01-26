@@ -10,12 +10,13 @@ export class SnackDto {
             name: snack.name,
             description: snack.description,
             unitMoneyAmount: Number(snack.unitMoneyAmount),
-            snackItems: snack.snackItems.map((snackItem) => ({
-                id: snackItem.id,
-                ingredientId: snackItem.ingredientId,
-                ingredientAmount: snackItem.ingredientAmount,
-                snackId: snackItem.snackId,
-            })),
+            snackItems:
+                snack.snackItems?.map((snackItem) => ({
+                    id: snackItem.id,
+                    ingredientId: snackItem.ingredientId,
+                    ingredientAmount: snackItem.ingredientAmount,
+                    ingredient: snackItem.ingredient,
+                })) ?? [],
         };
     }
 
@@ -27,12 +28,13 @@ export class SnackDto {
             name: snack.name,
             description: snack.description,
             unitMoneyAmount: Number(snack.unitMoneyAmount),
-            snackItems: snack.snackItems.map((snackItem) => ({
-                id: snackItem.id,
-                ingredientId: snackItem.ingredientId,
-                ingredientAmount: snackItem.ingredientAmount,
-                snackId: snackItem.snackId,
-            })),
+            snackItems:
+                snack.snackItems?.map((snackItem) => ({
+                    id: snackItem.id,
+                    ingredientId: snackItem.ingredientId,
+                    ingredientAmount: snackItem.ingredientAmount,
+                    ingredient: snackItem.ingredient,
+                })) ?? [],
         }));
     }
 }

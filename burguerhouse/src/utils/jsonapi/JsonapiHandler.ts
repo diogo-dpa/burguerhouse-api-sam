@@ -9,7 +9,7 @@ import {
     MountSuccessResponseType,
     RelationshipType,
 } from './typesJsonapi';
-import { mapRelationTypeToModelType } from './utilsJsonapi';
+import { mapRelationTypeToModelType, removeKeysFromObject } from './utilsJsonapi';
 
 export class JSONAPIHandler {
     private contentType = 'application/vnd.api+json';
@@ -54,20 +54,16 @@ export class JSONAPIHandler {
 
         const firstLevelRelations = relations?.map((relation) => relation.split('.')[0]) ?? [];
 
-        const bodyWithoutId: Record<string, any> | null = body
-            ? Object.fromEntries(
-                  Object.entries(body).filter(
-                      ([key]) =>
-                          key !== 'id' &&
-                          (!relations ||
-                              !firstLevelRelations
-                                  .map((relation) =>
-                                      mapRelationTypeToModelType(relation as JsonAPIProjectTypesEnum).toString(),
-                                  )
-                                  .includes(key)),
+        const keysToRemove = relations
+            ? [
+                  'id',
+                  ...firstLevelRelations.map((relation) =>
+                      mapRelationTypeToModelType(relation as JsonAPIProjectTypesEnum).toString(),
                   ),
-              )
-            : null;
+              ]
+            : ['id'];
+
+        const bodyWithoutId: Record<string, any> | null = body ? removeKeysFromObject(body, keysToRemove) : null;
 
         const response: JsonAPIBodyResponse<T> = {
             data: bodyWithoutId
@@ -102,23 +98,16 @@ export class JSONAPIHandler {
     }: MountSuccessResponseType): ControllerResponseJsonAPI {
         if (!Array.isArray(body)) return this.mountErrorResponseConflict();
 
+        const keysToRemove = relationships
+            ? ['id', 'type', mapRelationTypeToModelType(relationships.relations[0] as JsonAPIProjectTypesEnum)]
+            : ['id'];
+
         const bodyWithoutId = body
             ? body.map((item: Record<string, any>) => ({
                   type: options.type,
                   id: item?.id,
                   attributes: {
-                      ...Object.fromEntries(
-                          Object.entries(item).filter(
-                              ([key]) =>
-                                  key !== 'id' &&
-                                  key !== 'type' &&
-                                  (!relationships ||
-                                      key !==
-                                          mapRelationTypeToModelType(
-                                              relationships.relations[0] as JsonAPIProjectTypesEnum,
-                                          )),
-                          ),
-                      ),
+                      ...removeKeysFromObject(item, keysToRemove),
                   },
                   relationships: this.getRelationships(relationships, options.type, item),
               }))
@@ -166,9 +155,7 @@ export class JSONAPIHandler {
                                       id: relation.id,
                                       type: relation,
                                       attributes: {
-                                          ...Object.fromEntries(
-                                              Object.entries(relation).filter(([key]) => key !== 'id'),
-                                          ),
+                                          ...removeKeysFromObject(relation, ['id']),
                                       },
                                   }),
                               )
@@ -187,7 +174,7 @@ export class JSONAPIHandler {
                   type: options.type,
                   id: item?.id,
                   attributes: {
-                      ...Object.fromEntries(Object.entries(item).filter(([key]) => key !== 'id')),
+                      ...removeKeysFromObject(item, ['id']),
                   },
               }))
             : ([] as JsonAPIBodyDataType<any>[]);

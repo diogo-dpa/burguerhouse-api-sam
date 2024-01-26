@@ -1,13 +1,15 @@
+import { IngredientResponseModel } from '../ingredient/IngredientResponseModel';
+
 export class SnackItemResponseModel {
     id: string;
-    snackId: string;
     ingredientAmount: number;
     ingredientId?: string;
+    ingredient?: IngredientResponseModel;
 
-    constructor(_id: string, _snackId: string, _ingredientAmount: number, _ingredientId: string) {
+    constructor(_id: string, _ingredientAmount: number, _ingredientId: string, ingredient: IngredientResponseModel) {
         this.id = _id;
-        this.snackId = _snackId;
         this.ingredientAmount = _ingredientAmount;
         this.ingredientId = _ingredientId;
+        this.ingredient = ingredient;
     }
 }

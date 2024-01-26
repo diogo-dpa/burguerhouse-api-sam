@@ -15,6 +15,9 @@ export class UserService implements IUserService {
     }
 
     async createUser(newUser: UserCreateModel): Promise<UserResponseModel> {
+        const existingUser = await this.userRepository.getByEmail(newUser.email);
+        if (existingUser) throw new Error(ErrorHandler.returnBadRequestCustomError('Existing user email'));
+
         const user = UserDto.convertUserCreateModelToPrismaModel(newUser);
         const createdUser = await this.userRepository.create(user);
 

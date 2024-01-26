@@ -5,6 +5,7 @@ import { JsonAPIQueryOptions } from '../../utils/jsonapi/typesJsonapi';
 export interface IPrismaUserRepository {
     getAll: (queryOptions?: JsonAPIQueryOptions) => Promise<UserPrismaModel[]>;
     getById: (id: string, queryOptions?: JsonAPIQueryOptions) => Promise<UserPrismaModel | null>;
+    getByEmail: (email: string) => Promise<UserPrismaModel | null>;
     update: (id: string, updateData: Prisma.UserUpdateInput) => Promise<UserPrismaModel>;
     create: (newData: Prisma.UserCreateInput) => Promise<UserPrismaModel>;
     delete: (id: string) => Promise<void>;

@@ -35,6 +35,18 @@ export class PrismaIngredientRepository implements IPrismaIngredientRepository {
         return { ...ingredient, unitMoneyAmount: Number(ingredient.unitMoneyAmount) };
     }
 
+    async getByName(name: string): Promise<IngredientPrismaModel | null> {
+        const ingredient = await prisma.ingredients.findUnique({
+            where: {
+                name,
+            },
+        });
+
+        if (!ingredient) return null;
+
+        return { ...ingredient, unitMoneyAmount: Number(ingredient.unitMoneyAmount) };
+    }
+
     async update(id: string, updateData: Prisma.IngredientsUpdateInput): Promise<IngredientPrismaModel> {
         const updatedIngredient = await prisma.ingredients.update({
             where: {

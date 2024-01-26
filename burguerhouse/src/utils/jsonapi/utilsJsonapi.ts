@@ -12,8 +12,12 @@ export function mapRelationTypeToModelType(relationType: JsonAPIProjectTypesEnum
             return 'users';
         case JsonAPIProjectTypesEnum.snack:
             return 'snacks';
+        case JsonAPIProjectTypesEnum.snackItems:
+            return 'snackItems';
         case JsonAPIProjectTypesEnum.menu:
             return 'menus';
+        case JsonAPIProjectTypesEnum.menuItems:
+            return 'menuItems';
         default:
             return '';
     }
@@ -32,4 +36,8 @@ export function convertNestedObjectIntoArray(obj: object): string[] {
 
         return [...acm, [refKey, ...convertNestedObjectIntoArray(refValue)].join('.')];
     }, []);
+}
+
+export function removeKeysFromObject(obj: object, keysToRemove: string[]): object {
+    return Object.fromEntries(Object.entries(obj).filter(([key]) => !keysToRemove.includes(key)));
 }

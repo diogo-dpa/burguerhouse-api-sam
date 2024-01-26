@@ -6,6 +6,7 @@ import { SnackUpdateModel } from '../models/snack/SnackUpdateModel';
 import { PrismaIngredientRepository } from '../repositories/prisma/PrismaIngredientRepository';
 import { PrismaSnacksRepository } from '../repositories/prisma/PrismaSnacksRepository';
 import { ErrorHandler } from '../utils/ErrorHandler';
+import { JsonAPIQueryOptions } from '../utils/jsonapi/typesJsonapi';
 
 export class SnackService implements ISnackService {
     private snackRepository: PrismaSnacksRepository;
@@ -19,6 +20,18 @@ export class SnackService implements ISnackService {
     async createSnack(newSnack: SnackCreateModel): Promise<SnackResponseModel> {
         const { snackItems } = newSnack;
 
+        if (
+            snackItems?.some(
+                (item) =>
+                    !ErrorHandler.validateStringParameterReturningBool(item.ingredientId) ||
+                    !ErrorHandler.validateNumberParameterReturningBool(item.ingredientAmount),
+            )
+        )
+            throw new Error(ErrorHandler.returnBadRequestCustomError(ErrorHandler.invalidParametersMessage));
+
+        const existingSnack = await this.snackRepository.getByName(newSnack.name);
+        if (existingSnack) throw new Error(ErrorHandler.returnBadRequestCustomError('Existing snack name'));
+
         const ingredientIdFromSnackItems = snackItems.map((ingredientSnackItem) => ingredientSnackItem.ingredientId);
 
         const ingredientPromise = ingredientIdFromSnackItems
@@ -27,8 +40,7 @@ export class SnackService implements ISnackService {
 
         const ingredients = await Promise.all([...ingredientPromise]);
 
-        if (ingredients.some((ingredient) => ingredient === null))
-            throw new Error(ErrorHandler.ingredientNotFoundMessage);
+        if (ingredients.some((ingredient) => !ingredient)) throw new Error(ErrorHandler.ingredientNotFoundMessage);
 
         const snack = await this.snackRepository.create(newSnack);
         return SnackDto.convertPrismaModelToSnackModel(snack);
@@ -37,7 +49,20 @@ export class SnackService implements ISnackService {
     async updateSnack(snackId: string, updateSnack: SnackUpdateModel): Promise<SnackResponseModel> {
         const { snackItems } = updateSnack;
 
+        const foundSnack = await this.snackRepository.getById(snackId);
+
+        if (!foundSnack) throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.snackNotFoundMessage));
+
         if (!!snackItems?.length) {
+            if (
+                snackItems?.some(
+                    (item) =>
+                        !ErrorHandler.validateStringParameterReturningBool(item.ingredientId) ||
+                        !ErrorHandler.validateNumberParameterReturningBool(item.ingredientAmount),
+                )
+            )
+                throw new Error(ErrorHandler.returnBadRequestCustomError(ErrorHandler.invalidParametersMessage));
+
             const ingredientIdFromSnackItems = snackItems.map(
                 (ingredientSnackItem) => ingredientSnackItem.ingredientId,
             );
@@ -56,17 +81,25 @@ export class SnackService implements ISnackService {
         return SnackDto.convertPrismaModelToSnackModel(snack);
     }
 
-    async getAllSnacks(): Promise<SnackResponseModel[]> {
-        const snacks = await this.snackRepository.getAll();
+    async getAllSnacks(queryOptions?: JsonAPIQueryOptions): Promise<SnackResponseModel[]> {
+        const { sort, include, page, fields } = queryOptions ?? {};
+
+        const snacks = await this.snackRepository.getAll({ sort, include, page, fields });
         return SnackDto.convertPrismaModelArrayToSnackModelArray(snacks);
     }
 
-    async getSnackById(snackId: string): Promise<SnackResponseModel> {
-        const snack = await this.snackRepository.getById(snackId);
+    async getSnackById(snackId: string, queryOptions?: JsonAPIQueryOptions): Promise<SnackResponseModel> {
+        const { sort, include, page, fields } = queryOptions ?? {};
+
+        const snack = await this.snackRepository.getById(snackId, { sort, include, page, fields });
         return SnackDto.convertPrismaModelToSnackModel(snack);
     }
 
     async deleteSnackById(snackId: string): Promise<void> {
+        const foundSnack = await this.snackRepository.getById(snackId);
+
+        if (!foundSnack) throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.snackNotFoundMessage));
+
         await this.snackRepository.delete(snackId);
     }
 }

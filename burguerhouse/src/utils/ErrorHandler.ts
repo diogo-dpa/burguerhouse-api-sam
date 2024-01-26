@@ -15,6 +15,10 @@ export class ErrorHandler {
         return `${StatusCodeEnum.notFound} - ${message}`;
     }
 
+    static returnBadRequestCustomError(message: string): string {
+        return `${StatusCodeEnum.badRequest} - ${message}`;
+    }
+
     static validateStringParameter(parameter: string): void {
         if (parameter === null || parameter === undefined || !parameter.length || typeof parameter !== 'string')
             throw new Error(this.invalidParametersMessage);

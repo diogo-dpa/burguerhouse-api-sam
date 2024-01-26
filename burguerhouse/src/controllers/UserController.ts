@@ -44,12 +44,13 @@ export class UserController implements IUserController {
             if (type !== JsonAPIProjectTypesEnum.people || Object.keys(rest).length > 0)
                 return this.jsonAPIHandler.mountErrorResponseConflict();
 
-            const { name, email, isEmployee } = attributes;
+            const { name, email, isEmployee, ...restAttr } = attributes;
 
             if (
                 !ErrorHandler.validateStringParameterReturningBool(name as string) ||
                 !ErrorHandler.validateStringParameterReturningBool(email as string) ||
-                !ErrorHandler.validateBooleanParameterReturningBool(isEmployee as boolean)
+                !ErrorHandler.validateBooleanParameterReturningBool(isEmployee as boolean) ||
+                Object.keys(restAttr).length > 0
             )
                 return this.jsonAPIHandler.mountErrorResponseForbidden();
 

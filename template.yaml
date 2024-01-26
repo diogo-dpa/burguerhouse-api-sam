@@ -24,37 +24,37 @@ Resources:
           DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
         GetAllDataFromRelationShortSyntax:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /users/{id}/{relation}
             Method: get
         GetAllDataFromRelationLongSyntax:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /users/{id}/relationships/{relation}
             Method: get
         GetAllUsers:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /users
             Method: get
         GetUserById:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /users/{id}
             Method: get
         CreateUser:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /users
             Method: post
         UpdateUser:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /users/{id}
             Method: patch
         DeleteUser:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /users/{id}
             Method: delete
@@ -83,27 +83,27 @@ Resources:
           DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
         GetAllIngredients:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /ingredients
             Method: get
         GetIngredientById:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /ingredients/{id}
             Method: get
         CreateIngredient:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /ingredients
             Method: post
         UpdateIngredient:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /ingredients/{id}
             Method: patch
         DeleteIngredient:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /ingredients/{id}
             Method: delete
@@ -131,28 +131,38 @@ Resources:
         Variables:
           DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
+        GetAllDataFromRelationShortSyntax:
+          Type: Api
+          Properties:
+            Path: /snacks/{id}/{relation}
+            Method: get
+        GetAllDataFromRelationLongSyntax:
+          Type: Api
+          Properties:
+            Path: /snacks/{id}/relationships/{relation}
+            Method: get
         GetAllSnacks:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /snacks
             Method: get
         GetSnackById:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /snacks/{id}
             Method: get
         CreateSnack:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /snacks
             Method: post
         UpdateSnack:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /snacks/{id}
             Method: patch
         DeleteSnack:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /snacks/{id}
             Method: delete
@@ -181,27 +191,27 @@ Resources:
           DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
         GetAllMenus:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /menus
             Method: get
         GetMenuById:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /menus/{id}
             Method: get
         CreateMenu:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /menus
             Method: post
         UpdateMenu:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /menus/{id}
             Method: patch
         DeleteMenu:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /menus/{id}
             Method: delete
@@ -230,27 +240,27 @@ Resources:
           DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
         GetAllOrder:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /orders
             Method: get
         GetOrderById:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /orders/{id}
             Method: get
         CreateOrder:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /orders
             Method: post
         UpdateOrder:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /orders/{id}
             Method: patch
         DeleteOrder:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api 
           Properties:
             Path: /orders/{id}
             Method: delete

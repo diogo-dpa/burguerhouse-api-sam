@@ -4,7 +4,9 @@ export enum JsonAPIProjectTypesEnum {
     orderItems = 'orderItems',
     ingredient = 'ingredient',
     snack = 'snack',
+    snackItems = 'snackItems',
     menu = 'menu',
+    menuItems = 'menuItems',
 }
 
 export type JsonAPIQueryOptions = {
@@ -26,11 +28,16 @@ export type JsonAPIBodyErrorResponse = {
     errors: JsonAPIBodyErrorType[];
 } & Omit<JsonAPIBodyResponse<any>, 'data'>;
 
+export type JsonAPIRelationshipsDataType = {
+    type: string;
+    id: string;
+};
+
 export type JsonAPIBodyDataType<T> = {
     type: string;
     id?: string;
     attributes: Omit<T, 'id'>;
-    relationships?: Record<string, any>;
+    relationships?: Record<string, Partial<JsonAPIBodyResponse<T>>>;
     links?: Record<string, string>;
 };
 

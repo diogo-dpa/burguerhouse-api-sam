@@ -10,6 +10,8 @@ export function defineErrorResponse(errorMessage: string): ControllerResponseJso
     switch (code) {
         case StatusCodeEnum.notFound.toString():
             return jsonAPIHandler.mountErrorResponseNotFound(message);
+        case StatusCodeEnum.badRequest.toString():
+            return jsonAPIHandler.mountErrorResponseBadRequest(message);
         default:
         case StatusCodeEnum.internalServerError.toString():
             return jsonAPIHandler.mountErrorResponseInternalServer(message);
