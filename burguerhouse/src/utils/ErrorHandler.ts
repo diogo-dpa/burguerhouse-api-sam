@@ -4,6 +4,7 @@ import { StatusCodeEnum } from './commonEnums';
 export class ErrorHandler {
     public static invalidParametersMessage = 'Invalid params';
     public static ingredientNotFoundMessage = 'Ingredient not found';
+    public static menuNotFoundMessage = 'Menu not found';
     public static snackNotFoundMessage = 'Snack not found';
     public static userNotFoundMessage = 'User not found';
     public static internalServerErrorMessage = 'Internal server error';

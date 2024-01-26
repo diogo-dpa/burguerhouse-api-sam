@@ -169,15 +169,16 @@ export class JSONAPIHandler {
         options,
         body,
     }: MountSuccessResponseType): ControllerResponseJsonAPI {
-        const bodyWithoutId = body
-            ? body.map((item: Record<string, any>) => ({
-                  type: options.type,
-                  id: item?.id,
-                  attributes: {
-                      ...removeKeysFromObject(item, ['id']),
-                  },
-              }))
-            : ([] as JsonAPIBodyDataType<any>[]);
+        const bodyWithoutId =
+            body && body?.length > 0
+                ? body.map((item: Record<string, any>) => ({
+                      type: options.type,
+                      id: item?.id,
+                      attributes: {
+                          ...removeKeysFromObject(item, ['id']),
+                      },
+                  }))
+                : ([] as JsonAPIBodyDataType<any>[]);
 
         const response: JsonAPIBodyResponseArray<T> = {
             data: bodyWithoutId as JsonAPIBodyDataType<T>[],

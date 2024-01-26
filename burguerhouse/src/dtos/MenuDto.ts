@@ -9,9 +9,8 @@ export class MenuDto {
             id: menu.id,
             name: menu.name,
             description: menu.description,
-            menuItems: menu.menuItems.map((menuItem) => ({
+            menuItems: menu.menuItems?.map((menuItem) => ({
                 id: menuItem.id,
-                menuId: menuItem.menuId,
                 ingredientId: menuItem.ingredientId,
                 ingredient: menuItem.ingredient ?? null,
                 snackId: menuItem.snackId,
@@ -27,9 +26,8 @@ export class MenuDto {
             id: menu.id,
             name: menu.name,
             description: menu.description,
-            menuItems: menu.menuItems.map((menuItem) => ({
+            menuItems: menu.menuItems?.map((menuItem) => ({
                 id: menuItem.id,
-                menuId: menuItem.menuId,
                 ingredientId: menuItem.ingredientId,
                 ingredient: menuItem.ingredient ?? null,
                 snackId: menuItem.snackId,

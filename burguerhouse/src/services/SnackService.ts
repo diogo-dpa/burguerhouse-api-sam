@@ -40,7 +40,8 @@ export class SnackService implements ISnackService {
 
         const ingredients = await Promise.all([...ingredientPromise]);
 
-        if (ingredients.some((ingredient) => !ingredient)) throw new Error(ErrorHandler.ingredientNotFoundMessage);
+        if (ingredients.some((ingredient) => !ingredient))
+            throw new Error(ErrorHandler.returnBadRequestCustomError(ErrorHandler.ingredientNotFoundMessage));
 
         const snack = await this.snackRepository.create(newSnack);
         return SnackDto.convertPrismaModelToSnackModel(snack);
@@ -74,7 +75,7 @@ export class SnackService implements ISnackService {
             const ingredients = await Promise.all([...ingredientPromise]);
 
             if (ingredients.some((ingredient) => ingredient === null))
-                throw new Error(ErrorHandler.ingredientNotFoundMessage);
+                throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.ingredientNotFoundMessage));
         }
 
         const snack = await this.snackRepository.update(snackId, updateSnack);

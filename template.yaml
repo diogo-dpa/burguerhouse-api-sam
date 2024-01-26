@@ -190,6 +190,16 @@ Resources:
         Variables:
           DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
+        GetAllDataFromRelationShortSyntax:
+          Type: Api
+          Properties:
+            Path: /menus/{id}/{relation}
+            Method: get
+        GetAllDataFromRelationLongSyntax:
+          Type: Api
+          Properties:
+            Path: /menus/{id}/relationships/{relation}
+            Method: get
         GetAllMenus:
           Type: Api
           Properties:
@@ -239,6 +249,16 @@ Resources:
         Variables:
           DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
+        GetAllDataFromRelationShortSyntax:
+          Type: Api
+          Properties:
+            Path: /orders/{id}/{relation}
+            Method: get
+        GetAllDataFromRelationLongSyntax:
+          Type: Api
+          Properties:
+            Path: /orders/{id}/relationships/{relation}
+            Method: get
         GetAllOrder:
           Type: Api
           Properties:
