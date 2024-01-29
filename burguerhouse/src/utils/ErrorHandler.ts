@@ -7,6 +7,7 @@ export class ErrorHandler {
     public static menuNotFoundMessage = 'Menu not found';
     public static snackNotFoundMessage = 'Snack not found';
     public static userNotFoundMessage = 'User not found';
+    public static existingUserEmaiMessage = 'Existing user email';
     public static internalServerErrorMessage = 'Internal server error';
     public static insufficientIngredientAmountMessage = 'Available ingredient amount is insufficient';
 

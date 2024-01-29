@@ -17,6 +17,7 @@ export class UserDto {
     static convertUserUpdateModelToPrismaModel(user: UserUpdateModel): Prisma.UserUpdateInput {
         return {
             name: user.name,
+            email: user.email,
             isEmployee: user.isEmployee,
         };
     }

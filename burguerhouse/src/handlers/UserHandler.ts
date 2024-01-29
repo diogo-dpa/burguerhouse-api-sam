@@ -80,7 +80,6 @@ export class UserHandler {
                     return response as APIGatewayProxyResult;
             }
         } catch (error: any) {
-            console.log(error);
             return defineErrorResponse(error.message) as APIGatewayProxyResult;
         }
     };

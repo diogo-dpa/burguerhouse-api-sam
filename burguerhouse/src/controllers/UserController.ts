@@ -94,16 +94,17 @@ export class UserController implements IUserController {
             if (id !== formattedId || type !== JsonAPIProjectTypesEnum.people || Object.keys(rest).length > 0)
                 return this.jsonAPIHandler.mountErrorResponseConflict();
 
-            const { name, isEmployee, ...restAttr } = attributes;
+            const { name, email, isEmployee, ...restAttr } = attributes;
 
             if (
                 (!ErrorHandler.validateStringParameterReturningBool(name) &&
+                    !ErrorHandler.validateStringParameterReturningBool(email) &&
                     !ErrorHandler.validateBooleanParameterReturningBool(isEmployee)) ||
                 Object.keys(restAttr).length > 0
             )
                 return this.jsonAPIHandler.mountErrorResponseForbidden();
 
-            const user = await this.userService.updateUser(formattedId, { name, isEmployee });
+            const user = await this.userService.updateUser(formattedId, { name, email, isEmployee });
             return this.jsonAPIHandler.mountSuccessResponse<UserResponseModel>({
                 options: { type: JsonAPIProjectTypesEnum.people, linkSelf: `${this.jsonAPIRoute}/${user.id}` },
                 body: user,

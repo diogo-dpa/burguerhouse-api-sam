@@ -16,7 +16,8 @@ export class UserService implements IUserService {
 
     async createUser(newUser: UserCreateModel): Promise<UserResponseModel> {
         const existingUser = await this.userRepository.getByEmail(newUser.email);
-        if (existingUser) throw new Error(ErrorHandler.returnBadRequestCustomError('Existing user email'));
+        if (existingUser)
+            throw new Error(ErrorHandler.returnBadRequestCustomError(ErrorHandler.existingUserEmaiMessage));
 
         const user = UserDto.convertUserCreateModelToPrismaModel(newUser);
         const createdUser = await this.userRepository.create(user);
@@ -26,8 +27,13 @@ export class UserService implements IUserService {
 
     async updateUser(userId: string, user: UserUpdateModel): Promise<UserResponseModel> {
         const foundUser = await this.userRepository.getById(userId);
-
         if (!foundUser) throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.userNotFoundMessage));
+
+        if (!!user.email) {
+            const existingUser = await this.userRepository.getByEmail(user.email);
+            if (existingUser)
+                throw new Error(ErrorHandler.returnBadRequestCustomError(ErrorHandler.existingUserEmaiMessage));
+        }
 
         const formattedUser = UserDto.convertUserUpdateModelToPrismaModel(user);
         const updatedUser = await this.userRepository.update(userId, formattedUser);

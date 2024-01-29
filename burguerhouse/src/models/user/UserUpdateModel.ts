@@ -1,9 +1,11 @@
 export class UserUpdateModel {
     name?: string;
+    email?: string;
     isEmployee?: boolean;
 
-    constructor(_name: string, _isEmployee: boolean) {
+    constructor(_name: string, _email: string, _isEmployee: boolean) {
         this.name = _name;
+        this.email = _email;
         this.isEmployee = _isEmployee;
     }
 }

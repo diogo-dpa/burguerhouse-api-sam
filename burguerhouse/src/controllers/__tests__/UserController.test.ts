@@ -152,14 +152,18 @@ describe('UserController', () => {
                 expect(userResponse).toStrictEqual(expectedResponse);
             });
 
-            it('should return the status code 403 when passing wrong name in user data', async () => {
+            it.each([
+                ['name', '', mockErrorResponseForbidden],
+                ['email', '', mockErrorResponseForbidden],
+                ['isEmployee', undefined, mockErrorResponseForbidden],
+            ])('should return the status code 403 when passing wrong %s in user data', async (key, input, expected) => {
                 const wrongData = {
                     ...mockBodyRequestCreateUserController,
                     data: {
                         ...mockBodyRequestCreateUserController.data,
                         attributes: {
                             ...mockBodyRequestCreateUserController.data.attributes,
-                            name: '',
+                            [key]: input,
                         },
                     },
                 };
@@ -168,59 +172,7 @@ describe('UserController', () => {
                     body: JSON.stringify(wrongData),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
-
-                spyUserServiceCreate = jest.spyOn(userService, 'createUser');
-
-                const userResponse = await userController.create(request);
-
-                expect(spyUserServiceCreate).toHaveBeenCalledTimes(0);
-                expect(userResponse).toStrictEqual(expectedResponse);
-            });
-
-            it('should return the status code 403 when passing wrong email in user data', async () => {
-                const wrongData = {
-                    ...mockBodyRequestCreateUserController,
-                    data: {
-                        ...mockBodyRequestCreateUserController.data,
-                        attributes: {
-                            ...mockBodyRequestCreateUserController.data.attributes,
-                            email: '',
-                        },
-                    },
-                };
-                const request: ControllerOptions = {
-                    header: JSON.stringify(mockHeaderRequest),
-                    body: JSON.stringify(wrongData),
-                    params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
-                };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
-
-                spyUserServiceCreate = jest.spyOn(userService, 'createUser');
-
-                const userResponse = await userController.create(request);
-
-                expect(spyUserServiceCreate).toHaveBeenCalledTimes(0);
-                expect(userResponse).toStrictEqual(expectedResponse);
-            });
-
-            it('should return the status code 403 when passing wrong isEmployee in user data', async () => {
-                const wrongData = {
-                    ...mockBodyRequestCreateUserController,
-                    data: {
-                        ...mockBodyRequestCreateUserController.data,
-                        attributes: {
-                            ...mockBodyRequestCreateUserController.data.attributes,
-                            isEmployee: undefined,
-                        },
-                    },
-                };
-                const request: ControllerOptions = {
-                    header: JSON.stringify(mockHeaderRequest),
-                    body: JSON.stringify(wrongData),
-                    params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
-                };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = expected;
 
                 spyUserServiceCreate = jest.spyOn(userService, 'createUser');
 
@@ -379,7 +331,7 @@ describe('UserController', () => {
                 expect(userResponse).toStrictEqual(expectedResponse);
             });
 
-            it('should return the status code 403 when passing wrong name and isEmployee in user data', async () => {
+            it('should return the status code 403 when passing wrong name, email and isEmployee in user data', async () => {
                 const wrongData = {
                     ...mockBodyRequestUpdateUserController,
                     data: {
@@ -387,6 +339,7 @@ describe('UserController', () => {
                         attributes: {
                             ...mockBodyRequestCreateUserController.data.attributes,
                             isEmployee: undefined,
+                            email: undefined,
                             name: undefined,
                         },
                     },
@@ -406,14 +359,14 @@ describe('UserController', () => {
                 expect(userResponse).toStrictEqual(expectedResponse);
             });
 
-            it('should return the status code 403 when passing any data different from name and isEmployee', async () => {
+            it('should return the status code 403 when passing any data different from name, email and isEmployee', async () => {
                 const wrongData = {
                     ...mockBodyRequestUpdateUserController,
                     data: {
                         ...mockBodyRequestUpdateUserController.data,
                         attributes: {
                             ...mockBodyRequestUpdateUserController.data.attributes,
-                            email: '',
+                            someInformation: '',
                         },
                     },
                 };
