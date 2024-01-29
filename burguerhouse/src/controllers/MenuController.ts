@@ -192,7 +192,7 @@ export class MenuController implements IMenuController {
                 const snacksIds = dataMenuItemSnack.map((menuItem) => menuItem.id);
 
                 if (dataMenuItemSnack.some((snack) => !this.menuRelations.includes(snack.type)))
-                    return this.jsonAPIHandler.mountErrorResponseForbidden('Invalid ingredient type');
+                    return this.jsonAPIHandler.mountErrorResponseForbidden('Invalid snack type');
 
                 if (
                     snacksIds.some((snack) => !snack) ||

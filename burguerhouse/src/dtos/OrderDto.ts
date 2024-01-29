@@ -7,6 +7,8 @@ export class OrderDto {
 
         return {
             id: order.id,
+            userId: order.userId,
+            user: order.user,
             totalPrice: order.totalPrice,
             orderDate: order.orderDate,
             orderItems:
@@ -26,6 +28,8 @@ export class OrderDto {
 
         return orders.map((order) => ({
             id: order.id,
+            userId: order.userId,
+            user: order.user,
             totalPrice: order.totalPrice,
             orderDate: order.orderDate,
             orderItems:

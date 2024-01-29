@@ -1,8 +1,38 @@
 import { expect, describe, it } from '@jest/globals';
-import { convertNestedObjectIntoArray, mapRelationTypeToModelType } from '../utilsJsonapi';
+import { convertNestedObjectIntoArray, mapRelationTypeToModelType, mapRelationTypeToRoute } from '../utilsJsonapi';
 import { JsonAPIProjectTypesEnum } from '../typesJsonapi';
 
 describe('Unit tests - utilsJsonapi', function () {
+    describe('mapRelationTypeToRoute', () => {
+        it('should return an empty string when the relation type is different from the mapped types', () => {
+            expect(mapRelationTypeToRoute('Wrong type' as JsonAPIProjectTypesEnum)).toEqual('');
+        });
+
+        it('should return orders when the relation type is order', () => {
+            expect(mapRelationTypeToRoute(JsonAPIProjectTypesEnum.order)).toEqual('orders');
+        });
+
+        it('should return orderItems when the relation type is orderItems', () => {
+            expect(mapRelationTypeToRoute(JsonAPIProjectTypesEnum.orderItems)).toEqual('orderItems');
+        });
+
+        it('should return ingredients when the relation type is ingredient', () => {
+            expect(mapRelationTypeToRoute(JsonAPIProjectTypesEnum.ingredient)).toEqual('ingredients');
+        });
+
+        it('should return users when the relation type is people', () => {
+            expect(mapRelationTypeToRoute(JsonAPIProjectTypesEnum.people)).toEqual('users');
+        });
+
+        it('should return snacks when the relation type is snack', () => {
+            expect(mapRelationTypeToRoute(JsonAPIProjectTypesEnum.snack)).toEqual('snacks');
+        });
+
+        it('should return menus when the relation type is menu', () => {
+            expect(mapRelationTypeToRoute(JsonAPIProjectTypesEnum.menu)).toEqual('menus');
+        });
+    });
+
     describe('mapRelationTypeToModelType', () => {
         it('should return an empty string when the relation type is different from the mapped types', () => {
             expect(mapRelationTypeToModelType('Wrong type' as JsonAPIProjectTypesEnum)).toEqual('');
@@ -21,7 +51,7 @@ describe('Unit tests - utilsJsonapi', function () {
         });
 
         it('should return users when the relation type is people', () => {
-            expect(mapRelationTypeToModelType(JsonAPIProjectTypesEnum.people)).toEqual('users');
+            expect(mapRelationTypeToModelType(JsonAPIProjectTypesEnum.people)).toEqual('user');
         });
 
         it('should return snacks when the relation type is snack', () => {

@@ -10,6 +10,8 @@ import { PrismaUserRepository } from '../repositories/prisma/PrismaUserRepositor
 import { ErrorHandler } from '../utils/ErrorHandler';
 import { OrderItemCreateModel } from '../models/orderItem/OrderItemCreateModel';
 import { SnackPrismaModel } from '../models/snack/SnackPrismaModel';
+import { JsonAPIQueryOptions } from '../utils/jsonapi/typesJsonapi';
+import { RelationSnackIngredient } from '../utils/commonTypes';
 
 export class OrderService implements IOrderService {
     private orderRepository: PrismaOrderRepository;
@@ -29,8 +31,22 @@ export class OrderService implements IOrderService {
         this.userRepository = _userRepository;
     }
 
-    async createOrder(newOrder: OrderCreateModel): Promise<OrderResponseModel> {
+    async createOrder(
+        newOrder: OrderCreateModel,
+        { snack, ingredient }: RelationSnackIngredient,
+    ): Promise<OrderResponseModel> {
         const { orderItems, userId } = newOrder;
+
+        if (
+            orderItems?.some(
+                (item) =>
+                    (ingredient &&
+                        item.ingredientId &&
+                        !ErrorHandler.validateStringParameterReturningBool(item.ingredientId)) ||
+                    (snack && item.snackId && !ErrorHandler.validateStringParameterReturningBool(item.snackId)),
+            )
+        )
+            throw new Error(ErrorHandler.returnBadRequestCustomError(ErrorHandler.invalidParametersMessage));
 
         await this.validateIfUserExists(userId);
         const updatedAmountIngredients = await this.validateSnacksAndIngredientsFromOrderItems(orderItems);
@@ -42,13 +58,18 @@ export class OrderService implements IOrderService {
         return OrderDto.convertPrismaModelToOrderModel(order);
     }
 
-    async getAllOrders(): Promise<OrderResponseModel[]> {
-        const orders = await this.orderRepository.getAll();
+    async getAllOrders(queryOptions?: JsonAPIQueryOptions): Promise<OrderResponseModel[]> {
+        const { sort, include, page, fields } = queryOptions ?? {};
+
+        const orders = await this.orderRepository.getAll({ sort, include, page, fields });
         return orders.map((order) => OrderDto.convertPrismaModelToOrderModel(order));
     }
 
-    async getOrderById(orderId: string): Promise<OrderResponseModel> {
-        const order = await this.orderRepository.getById(orderId);
+    async getOrderById(orderId: string, queryOptions?: JsonAPIQueryOptions): Promise<OrderResponseModel> {
+        const { sort, include, page, fields } = queryOptions ?? {};
+
+        const order = await this.orderRepository.getById(orderId, { sort, include, page, fields });
+
         return OrderDto.convertPrismaModelToOrderModel(order);
     }
 

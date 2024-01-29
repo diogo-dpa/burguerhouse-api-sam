@@ -8,6 +8,7 @@ import { HTTPMethodEnum } from '../utils/commonEnums';
 import { PrismaSnacksRepository } from '../repositories/prisma/PrismaSnacksRepository';
 import { formatQueryParameters } from './utilsHandler';
 import { JSONAPIHandler } from '../utils/jsonapi/JsonapiHandler';
+import { defineErrorResponse } from '../controllers/utilsController';
 
 export class MenuHandler {
     private menuController: MenuController;
@@ -26,7 +27,7 @@ export class MenuHandler {
 
             switch (event.httpMethod) {
                 case HTTPMethodEnum.POST.toString():
-                    const resultPost = await menuController.create({
+                    const resultPost = await this.menuController.create({
                         header: headerString,
                         params: {
                             queryParameter,
@@ -35,7 +36,7 @@ export class MenuHandler {
                     });
                     return resultPost as APIGatewayProxyResult;
                 case HTTPMethodEnum.PATCH.toString():
-                    const resultPut = await menuController.update({
+                    const resultPut = await this.menuController.update({
                         header: headerString,
                         params: { pathParameter: { id: idParameter }, queryParameter },
                         body: event.body ?? '',
@@ -54,7 +55,7 @@ export class MenuHandler {
                         });
                         return resultGet as APIGatewayProxyResult;
                     } else if (idParameter) {
-                        const resultGet = await menuController.getById({
+                        const resultGet = await this.menuController.getById({
                             header: headerString,
                             params: {
                                 pathParameter: { id: idParameter },
@@ -65,7 +66,7 @@ export class MenuHandler {
                         });
                         return resultGet as APIGatewayProxyResult;
                     } else {
-                        const resultGet = await menuController.getAll({
+                        const resultGet = await this.menuController.getAll({
                             header: headerString,
                             params: { queryParameter },
                         });
@@ -73,7 +74,7 @@ export class MenuHandler {
                     }
 
                 case HTTPMethodEnum.DELETE.toString():
-                    const resultDelete = await menuController.delete({
+                    const resultDelete = await this.menuController.delete({
                         header: headerString,
                         params: { pathParameter: { id: idParameter } },
                     });
@@ -83,9 +84,9 @@ export class MenuHandler {
                     const response = new JSONAPIHandler().mountErrorResponseNotFound();
                     return response as APIGatewayProxyResult;
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
-            return ErrorHandler.internalServerErrorHandler(error);
+            return defineErrorResponse(error.message) as APIGatewayProxyResult;
         }
     };
 }

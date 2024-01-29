@@ -274,11 +274,6 @@ Resources:
           Properties:
             Path: /orders
             Method: post
-        UpdateOrder:
-          Type: Api
-          Properties:
-            Path: /orders/{id}
-            Method: patch
         DeleteOrder:
           Type: Api 
           Properties:

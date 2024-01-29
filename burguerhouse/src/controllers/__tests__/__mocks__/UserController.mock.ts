@@ -208,12 +208,16 @@ export const mockOutputGetRelatonshipByIdUserService: UserResponseModel = {
     orders: [
         {
             id: '11',
+            userId: '1',
+            user: null,
             orderDate: new Date('2024-01-25'),
             orderItems: [],
             totalPrice: 10.5,
         },
         {
             id: '21',
+            userId: '1',
+            user: null,
             orderDate: new Date('2024-02-01'),
             orderItems: [],
             totalPrice: 33.8,
@@ -227,6 +231,8 @@ export const mockResponseGetRelationshipByIdUserController: JsonAPIBodyResponseA
             type: 'order',
             id: '11',
             attributes: {
+                userId: '1',
+                user: null,
                 orderDate: new Date('2024-01-25'),
                 orderItems: [],
                 totalPrice: 10.5,
@@ -236,6 +242,8 @@ export const mockResponseGetRelationshipByIdUserController: JsonAPIBodyResponseA
             type: 'order',
             id: '21',
             attributes: {
+                userId: '1',
+                user: null,
                 orderDate: new Date('2024-02-01'),
                 orderItems: [],
                 totalPrice: 33.8,

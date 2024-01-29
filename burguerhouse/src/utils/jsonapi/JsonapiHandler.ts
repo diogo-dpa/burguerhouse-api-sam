@@ -9,7 +9,7 @@ import {
     MountSuccessResponseType,
     RelationshipType,
 } from './typesJsonapi';
-import { mapRelationTypeToModelType, removeKeysFromObject } from './utilsJsonapi';
+import { mapRelationTypeToModelType, mapRelationTypeToRoute, removeKeysFromObject } from './utilsJsonapi';
 
 export class JSONAPIHandler {
     private contentType = 'application/vnd.api+json';
@@ -141,12 +141,12 @@ export class JSONAPIHandler {
                 ...acm,
                 [relation]: {
                     links: {
-                        self: `http://localhost:3000/${mapRelationTypeToModelType(parentType)}/${
+                        self: `http://localhost:3000/${mapRelationTypeToRoute(parentType)}/${
                             body?.id
-                        }/relationships/${mapRelationTypeToModelType(relation as JsonAPIProjectTypesEnum)}`,
-                        related: `http://localhost:3000/${mapRelationTypeToModelType(parentType)}/${
+                        }/relationships/${mapRelationTypeToRoute(relation as JsonAPIProjectTypesEnum)}`,
+                        related: `http://localhost:3000/${mapRelationTypeToRoute(parentType)}/${
                             body?.id
-                        }/${mapRelationTypeToModelType(relation as JsonAPIProjectTypesEnum)}`,
+                        }/${mapRelationTypeToRoute(relation as JsonAPIProjectTypesEnum)}`,
                     },
                     data:
                         relationships.includeData && body

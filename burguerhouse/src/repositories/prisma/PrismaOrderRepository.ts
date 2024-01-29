@@ -2,17 +2,18 @@ import { prisma } from '../../lib/prisma';
 import { IPrismaOrderRepository } from '../../irepositories/prisma/IPrismaOrderRepository';
 import { OrderPrismaModel } from '../../models/order/OrderPrismaModel';
 import { OrderCreateModel } from '../../models/order/OrderCreateModel';
+import { JsonAPIQueryOptions } from '../../utils/jsonapi/typesJsonapi';
 
 export class PrismaOrderRepository implements IPrismaOrderRepository {
-    async getAll(): Promise<OrderPrismaModel[]> {
+    private defaultInclude = { orderItems: true };
+
+    async getAll(queryOptions?: JsonAPIQueryOptions): Promise<OrderPrismaModel[]> {
+        const { sort, include } = queryOptions ?? {};
+
         const orders = await prisma.order.findMany({
+            orderBy: [...(sort ?? [])],
             include: {
-                orderItems: {
-                    include: {
-                        ingredient: true,
-                        snack: true,
-                    },
-                },
+                ...(include ?? this.defaultInclude),
             },
         });
 
@@ -21,18 +22,15 @@ export class PrismaOrderRepository implements IPrismaOrderRepository {
         );
     }
 
-    async getById(id: string): Promise<OrderPrismaModel | null> {
+    async getById(id: string, queryOptions?: JsonAPIQueryOptions): Promise<OrderPrismaModel | null> {
+        const { include } = queryOptions ?? {};
+
         const orderFound = await prisma.order.findUnique({
             where: {
                 id,
             },
             include: {
-                orderItems: {
-                    include: {
-                        ingredient: true,
-                        snack: true,
-                    },
-                },
+                ...(include ?? this.defaultInclude),
             },
         });
 
@@ -77,12 +75,7 @@ export class PrismaOrderRepository implements IPrismaOrderRepository {
                 },
             },
             include: {
-                orderItems: {
-                    include: {
-                        ingredient: true,
-                        snack: true,
-                    },
-                },
+                ...this.defaultInclude,
             },
         });
 
@@ -113,15 +106,16 @@ export class PrismaOrderRepository implements IPrismaOrderRepository {
         return orders.map((order) => ({
             ...order,
             totalPrice: Number(order.totalPrice),
-            orderItems: order.orderItems.map((orderItem) => ({
-                ...orderItem,
-                ingredient: orderItem.ingredient
-                    ? { ...orderItem.ingredient, unitMoneyAmount: Number(orderItem.ingredient.unitMoneyAmount) }
-                    : null,
-                snack: orderItem.snack
-                    ? { ...orderItem.snack, unitMoneyAmount: Number(orderItem.snack.unitMoneyAmount) }
-                    : null,
-            })),
+            orderItems:
+                order.orderItems?.map((orderItem) => ({
+                    ...orderItem,
+                    ingredient: orderItem.ingredient
+                        ? { ...orderItem.ingredient, unitMoneyAmount: Number(orderItem.ingredient.unitMoneyAmount) }
+                        : null,
+                    snack: orderItem.snack
+                        ? { ...orderItem.snack, unitMoneyAmount: Number(orderItem.snack.unitMoneyAmount) }
+                        : null,
+                })) ?? [],
         }));
     }
 }

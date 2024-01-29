@@ -1,7 +1,3 @@
-import { OrderResponseModel } from '../models/order/OrderResponseModel';
+import { IBaseController } from './IBaseController';
 
-export interface IOrderController {
-    getAll: () => Promise<OrderResponseModel[]>;
-    getById: (id: string) => Promise<OrderResponseModel | null>;
-    create: (body: string) => Promise<OrderResponseModel>;
-}
+export type IOrderController = Omit<IBaseController, 'update' | 'delete'>;
