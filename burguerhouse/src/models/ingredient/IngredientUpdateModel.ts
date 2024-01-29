@@ -1,7 +1,7 @@
 export class IngredientUpdateModel {
-    name: string;
-    unitMoneyAmount: number;
-    availableAmount: number;
+    name?: string;
+    unitMoneyAmount?: number;
+    availableAmount?: number;
 
     constructor(_name: string, _unitMoneyAmount: number, _availableAmount: number) {
         this.name = _name;

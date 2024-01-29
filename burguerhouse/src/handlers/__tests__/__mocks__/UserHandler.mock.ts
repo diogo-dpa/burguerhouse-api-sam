@@ -159,8 +159,7 @@ export const mockResponseGetByIdUserHandler = {
         },
     },
     links: {
-        self: 'http://localhost:3000/users/1/relationships/orders',
-        related: 'http://localhost:3000/users/1/orders',
+        self: 'http://localhost:3000/users/1',
     },
     jsonapi: {
         ...mockJsonAPIResponseClause,

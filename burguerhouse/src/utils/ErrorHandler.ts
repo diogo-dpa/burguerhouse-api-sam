@@ -4,10 +4,11 @@ import { StatusCodeEnum } from './commonEnums';
 export class ErrorHandler {
     public static invalidParametersMessage = 'Invalid params';
     public static ingredientNotFoundMessage = 'Ingredient not found';
+    public static existingIngredientNameMessage = 'Existing ingredient name';
     public static menuNotFoundMessage = 'Menu not found';
     public static snackNotFoundMessage = 'Snack not found';
     public static userNotFoundMessage = 'User not found';
-    public static existingUserEmaiMessage = 'Existing user email';
+    public static existingUserEmailMessage = 'Existing user email';
     public static internalServerErrorMessage = 'Internal server error';
     public static insufficientIngredientAmountMessage = 'Available ingredient amount is insufficient';
 
@@ -21,11 +22,6 @@ export class ErrorHandler {
         return `${StatusCodeEnum.badRequest} - ${message}`;
     }
 
-    static validateStringParameter(parameter: string): void {
-        if (parameter === null || parameter === undefined || !parameter.length || typeof parameter !== 'string')
-            throw new Error(this.invalidParametersMessage);
-    }
-
     static validateStringParameterReturningBool(parameter?: string | null): boolean {
         if (parameter === null || parameter === undefined || !parameter.length || typeof parameter !== 'string')
             return false;
@@ -33,22 +29,12 @@ export class ErrorHandler {
         return true;
     }
 
-    static validateBooleanParameter(parameter: boolean): void {
-        if (parameter === null || parameter === undefined || typeof parameter !== 'boolean')
-            throw new Error(this.invalidParametersMessage);
-    }
-
     static validateBooleanParameterReturningBool(parameter?: boolean | null): boolean {
         if (parameter === null || parameter === undefined || typeof parameter !== 'boolean') return false;
         return true;
     }
 
-    static validateNumberParameter(parameter: number): void {
-        if (parameter === null || parameter === undefined || typeof parameter !== 'number')
-            throw new Error(this.invalidParametersMessage);
-    }
-
-    static validateNumberParameterReturningBool(parameter: number): boolean {
+    static validateNumberParameterReturningBool(parameter?: number): boolean {
         if (parameter === null || parameter === undefined || typeof parameter !== 'number') return false;
 
         return true;

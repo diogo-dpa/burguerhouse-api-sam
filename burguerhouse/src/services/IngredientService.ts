@@ -16,7 +16,8 @@ export class IngredientService implements IIngredientService {
 
     async createIngredient(newIngredient: IngredientCreateModel): Promise<IngredientResponseModel> {
         const existingIngredient = await this.ingredientRepository.getByName(newIngredient.name);
-        if (existingIngredient) throw new Error(ErrorHandler.returnBadRequestCustomError('Existing ingredient name'));
+        if (existingIngredient)
+            throw new Error(ErrorHandler.returnBadRequestCustomError(ErrorHandler.existingIngredientNameMessage));
 
         const formattedIngredient = IngredientDto.convertIngredientCreateModelToPrismaModel(newIngredient);
         const ingredient = await this.ingredientRepository.create(formattedIngredient);
@@ -27,6 +28,12 @@ export class IngredientService implements IIngredientService {
         const foundIngredient = await this.ingredientRepository.getById(id);
         if (!foundIngredient)
             throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.ingredientNotFoundMessage));
+
+        if (!!newIngredient.name) {
+            const existingIngredient = await this.ingredientRepository.getByName(newIngredient.name);
+            if (existingIngredient)
+                throw new Error(ErrorHandler.returnBadRequestCustomError(ErrorHandler.existingIngredientNameMessage));
+        }
 
         const formattedIngredient = IngredientDto.converIngredientUpdateModelToPrismaModel(newIngredient);
         const ingredient = await this.ingredientRepository.update(id, formattedIngredient);

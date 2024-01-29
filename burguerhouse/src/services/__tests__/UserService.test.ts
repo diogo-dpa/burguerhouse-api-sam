@@ -259,6 +259,7 @@ describe('UserService', () => {
     });
 
     describe('getUserById', () => {
+        const queryOptions = { sort: undefined, include: undefined, page: undefined, fields: undefined };
         it('should return an empty object when it doesn`t find the user', async () => {
             const userId = '999';
 
@@ -268,6 +269,7 @@ describe('UserService', () => {
             const userFromService = await userService.getUserById(userId);
 
             expect(spyPrismaUserRepositoryGetById).toHaveBeenCalledTimes(1);
+            expect(spyPrismaUserRepositoryGetById).toHaveBeenCalledWith(userId, queryOptions);
             expect(userFromService).toStrictEqual({});
         });
 
@@ -295,6 +297,7 @@ describe('UserService', () => {
             const userFromService = await userService.getUserById(userId);
 
             expect(spyPrismaUserRepositoryGetById).toHaveBeenCalledTimes(1);
+            expect(spyPrismaUserRepositoryGetById).toHaveBeenCalledWith(userId, queryOptions);
             expect(userFromService).toStrictEqual(expectedUser);
         });
     });

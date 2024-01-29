@@ -87,17 +87,17 @@ export class IngredientController implements IIngredientController {
 
             const { type, attributes, id } = data;
 
+            if (!ErrorHandler.validateStringParameterReturningBool(id))
+                return this.jsonAPIHandler.mountErrorResponseForbidden();
+
             if (id !== formattedId || type !== JsonAPIProjectTypesEnum.ingredient || Object.keys(rest).length > 0)
                 return this.jsonAPIHandler.mountErrorResponseConflict();
 
             const { name, unitMoneyAmount, availableAmount, ...restAttr } = attributes;
 
-            if (!ErrorHandler.validateStringParameterReturningBool(id))
-                return this.jsonAPIHandler.mountErrorResponseForbidden();
-
             if (
                 (!ErrorHandler.validateStringParameterReturningBool(name) &&
-                    !ErrorHandler.validateNumberParameterReturningBool(Number(unitMoneyAmount)) &&
+                    !ErrorHandler.validateNumberParameterReturningBool(unitMoneyAmount) &&
                     !ErrorHandler.validateNumberParameterReturningBool(availableAmount)) ||
                 Object.keys(restAttr).length > 0
             )

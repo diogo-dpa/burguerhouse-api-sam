@@ -5,7 +5,7 @@ export const mockHeaderRequest = { 'Content-Type': 'application/vnd.api+json' };
 export const mockWrongHeaderRequest = { 'Content-Type': 'some-content-type' };
 export const mockWrongBodyDataPrimaryAttributesRequest = { data: {}, meta: {}, 'other-attribute': {} };
 export const mockWrongBodyDataAttributeAsNull = { data: null, meta: {} };
-export const mockWrongBodyDataTypeDifferent = { data: { type: 'some-type' }, meta: {} };
+export const mockWrongBodyDataTypeDifferent = { data: { type: 'some-type', id: '1' }, meta: {} };
 
 // Query Params
 export const mockQueryParamsRequest: JsonAPIQueryOptions = {
