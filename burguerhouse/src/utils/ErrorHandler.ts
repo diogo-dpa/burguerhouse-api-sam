@@ -12,8 +12,6 @@ export class ErrorHandler {
     public static internalServerErrorMessage = 'Internal server error';
     public static insufficientIngredientAmountMessage = 'Available ingredient amount is insufficient';
 
-    constructor() {}
-
     static returnNotFoundCustomError(message: string): string {
         return `${StatusCodeEnum.notFound} - ${message}`;
     }
@@ -46,18 +44,5 @@ export class ErrorHandler {
         if (parameter === null || parameter === undefined || typeof parameter !== 'number') return false;
 
         return true;
-    }
-
-    static validateUnsedParameters(parameter: typeof Object) {
-        if (!!Object.keys(parameter).length) throw new Error(this.invalidParametersMessage);
-    }
-
-    static internalServerErrorHandler(error: any): any {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                message: `${this.internalServerErrorMessage}: ${error.message}`,
-            }),
-        };
     }
 }
