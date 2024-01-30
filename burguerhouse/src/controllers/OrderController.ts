@@ -158,7 +158,7 @@ export class OrderController implements IOrderController {
 
             if (include || fields || page) return this.jsonAPIHandler.mountErrorResponseBadRequest();
 
-            const orders = await this.orderService.getAllOrders({sort});
+            const orders = await this.orderService.getAllOrders({ sort });
             return this.jsonAPIHandler.mountSuccessResponseArray<OrderResponseModel>({
                 options: { type: this.jsonAPIType, linkSelf: this.jsonAPIRoute },
                 body: orders,
@@ -253,9 +253,9 @@ export class OrderController implements IOrderController {
             case mapRelationTypeToModelType(JsonAPIProjectTypesEnum.people):
                 return [order.user];
             case mapRelationTypeToModelType(JsonAPIProjectTypesEnum.ingredient):
-                return order.orderItems.filter((item) => item.ingredient);
+                return order.orderItems.filter((item) => item.ingredient).map((item) => item.ingredient);
             case mapRelationTypeToModelType(JsonAPIProjectTypesEnum.snack):
-                return order.orderItems.filter((item) => item.snack);
+                return order.orderItems.filter((item) => item.snack).map((item) => item.snack);
             default:
                 return null;
         }

@@ -42,21 +42,23 @@ export const mockErrorResponseUnsuporttedMediaType = {
     }),
 };
 
-export const mockErrorResponseBadRequest = {
+export const mockErrorResponseBadRequest = (errorMessage?: string) => ({
     statusCode: 400,
     body: JSON.stringify({
         errors: [
             {
                 status: 400,
                 title: 'Bad Request',
-                detail: 'The request is not appropriate to the API rules. Ensure sending the right parameters.',
+                detail: `The request is not appropriate to the API rules. Ensure sending the right parameters.${
+                    errorMessage ? ' Detail: ' + errorMessage : ''
+                }`,
             },
         ],
         jsonapi: {
             ...mockJsonAPIResponseClause,
         },
     }),
-};
+});
 
 export const mockErrorResponseNotFound = (errorMessage?: string) => ({
     statusCode: 404,
@@ -76,37 +78,39 @@ export const mockErrorResponseNotFound = (errorMessage?: string) => ({
     }),
 });
 
-export const mockErrorResponseConflict = {
+export const mockErrorResponseConflict = (errorMessage?: string) => ({
     statusCode: 409,
     body: JSON.stringify({
         errors: [
             {
                 status: 409,
                 title: 'Conflict',
-                detail: 'The request violets the server constraints.',
+                detail: `The request violets the server constraints.${errorMessage ? ' Detail: ' + errorMessage : ''}`,
             },
         ],
         jsonapi: {
             ...mockJsonAPIResponseClause,
         },
     }),
-};
+});
 
-export const mockErrorResponseForbidden = {
+export const mockErrorResponseForbidden = (errorMessage?: string) => ({
     statusCode: 403,
     body: JSON.stringify({
         errors: [
             {
                 status: 403,
                 title: 'Forbidden',
-                detail: 'Unsupported request according to the current state of the resource.',
+                detail: `Unsupported request according to the current state of the resource.${
+                    errorMessage ? ' Detail: ' + errorMessage : ''
+                }`,
             },
         ],
         jsonapi: {
             ...mockJsonAPIResponseClause,
         },
     }),
-};
+});
 
 export const mockErrorResponseInternalServerError = (errorMessage?: string) => ({
     statusCode: 500,

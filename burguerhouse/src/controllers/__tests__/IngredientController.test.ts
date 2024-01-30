@@ -93,7 +93,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(mockWrongBodyDataPrimaryAttributesRequest),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyIngredientServiceCreate = jest.spyOn(ingredientService, 'createIngredient');
 
@@ -109,7 +109,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(mockWrongBodyDataAttributeAsNull),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyIngredientServiceCreate = jest.spyOn(ingredientService, 'createIngredient');
 
@@ -125,7 +125,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(mockWrongBodyDataTypeDifferent),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict();
 
                 spyIngredientServiceCreate = jest.spyOn(ingredientService, 'createIngredient');
 
@@ -142,7 +142,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(mockWrongBodyDataTypeDifferent),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict();
 
                 spyIngredientServiceCreate = jest.spyOn(ingredientService, 'createIngredient');
 
@@ -153,9 +153,9 @@ describe('IngredientController', () => {
             });
 
             it.each([
-                ['name', '', mockErrorResponseForbidden],
-                ['availableAmount', undefined, mockErrorResponseForbidden],
-                ['unitMoneyAmount', undefined, mockErrorResponseForbidden],
+                ['name', '', mockErrorResponseForbidden()],
+                ['availableAmount', undefined, mockErrorResponseForbidden()],
+                ['unitMoneyAmount', undefined, mockErrorResponseForbidden()],
             ])(
                 'should return the status code 403 when passing wrong %s in ingredient data',
                 async (key, input, expected) => {
@@ -252,7 +252,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(mockWrongBodyDataPrimaryAttributesRequest),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: { id: '' } },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyIngredientServiceUpdate = jest.spyOn(ingredientService, 'updateIngredient');
 
@@ -268,7 +268,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(mockWrongBodyDataAttributeAsNull),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyIngredientServiceUpdate = jest.spyOn(ingredientService, 'updateIngredient');
 
@@ -284,7 +284,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(mockWrongBodyDataTypeDifferent),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict();
 
                 spyIngredientServiceUpdate = jest.spyOn(ingredientService, 'updateIngredient');
 
@@ -301,7 +301,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(mockWrongBodyDataTypeDifferent),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict();
 
                 spyIngredientServiceUpdate = jest.spyOn(ingredientService, 'updateIngredient');
 
@@ -324,7 +324,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(wrongData),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict();
 
                 spyIngredientServiceUpdate = jest.spyOn(ingredientService, 'updateIngredient');
 
@@ -350,7 +350,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(wrongData),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyIngredientServiceUpdate = jest.spyOn(ingredientService, 'updateIngredient');
 
@@ -378,7 +378,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(wrongData),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyIngredientServiceUpdate = jest.spyOn(ingredientService, 'updateIngredient');
 
@@ -404,7 +404,7 @@ describe('IngredientController', () => {
                     body: JSON.stringify(wrongData),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyIngredientServiceUpdate = jest.spyOn(ingredientService, 'updateIngredient');
 
@@ -483,7 +483,7 @@ describe('IngredientController', () => {
                     header: JSON.stringify(mockHeaderRequest),
                     params: { queryParameter: { [key]: value }, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyIngredientServiceGetAll = jest.spyOn(ingredientService, 'getAllIngredients');
 
@@ -559,7 +559,7 @@ describe('IngredientController', () => {
                     header: JSON.stringify(mockHeaderRequest),
                     params: { queryParameter: { [key]: value }, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyIngredientServiceGetById = jest.spyOn(ingredientService, 'getIngredientById');
 
@@ -574,7 +574,7 @@ describe('IngredientController', () => {
                     header: JSON.stringify(mockHeaderRequest),
                     params: { queryParameter: {}, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyIngredientServiceGetById = jest.spyOn(ingredientService, 'getIngredientById');
 
@@ -647,7 +647,7 @@ describe('IngredientController', () => {
                     header: JSON.stringify(mockHeaderRequest),
                     params: { queryParameter: {}, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyIngredientServiceDelete = jest.spyOn(ingredientService, 'deleteIngredientById');
 

@@ -275,7 +275,7 @@ describe('Ingredient Service', () => {
 
     describe('getIngredientById', () => {
         const queryOptions = { sort: undefined, include: undefined, page: undefined, fields: undefined };
-        it('should return an error when the ingredient was not found', async () => {
+        it('should return an empty object when the ingredient was not found', async () => {
             const ingredientId = '999';
             prismaIngredientRepository.getById = jest.fn().mockResolvedValue(null);
             spyPrismaIngredientRepositoryGetById = jest.spyOn(prismaIngredientRepository, 'getById');

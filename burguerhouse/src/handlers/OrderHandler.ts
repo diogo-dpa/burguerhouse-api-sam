@@ -26,8 +26,8 @@ export class OrderHandler {
             const queryParameter = formatQueryParameters(JSON.parse(parsedQueryParameter));
 
             switch (event.httpMethod) {
-                case HTTPMethodEnum.POST.toString():
-                    const resultPost = await orderController.create({
+                case HTTPMethodEnum.POST:
+                    const resultPost = await this.orderController.create({
                         header: headerString,
                         params: {
                             queryParameter,
@@ -35,7 +35,7 @@ export class OrderHandler {
                         body: event.body ?? '',
                     });
                     return resultPost as APIGatewayProxyResult;
-                case HTTPMethodEnum.GET.toString():
+                case HTTPMethodEnum.GET:
                     if (relationParameter) {
                         const resultGet = await this.orderController.getRelationshipById({
                             header: headerString,
@@ -48,7 +48,7 @@ export class OrderHandler {
                         });
                         return resultGet as APIGatewayProxyResult;
                     } else if (idParameter) {
-                        const resultGet = await orderController.getById({
+                        const resultGet = await this.orderController.getById({
                             header: headerString,
                             params: {
                                 pathParameter: { id: idParameter },
@@ -59,7 +59,7 @@ export class OrderHandler {
                         });
                         return resultGet as APIGatewayProxyResult;
                     } else {
-                        const resultGet = await orderController.getAll({
+                        const resultGet = await this.orderController.getAll({
                             header: headerString,
                             params: { queryParameter },
                         });
@@ -71,7 +71,6 @@ export class OrderHandler {
                     return response as APIGatewayProxyResult;
             }
         } catch (error: any) {
-            console.log(error);
             return defineErrorResponse(error.message) as APIGatewayProxyResult;
         }
     };

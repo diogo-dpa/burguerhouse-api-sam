@@ -22,6 +22,14 @@ export class ErrorHandler {
         return `${StatusCodeEnum.badRequest} - ${message}`;
     }
 
+    static validateStringIdReturningBool(idParameter: string): boolean {
+        if (!this.validateStringParameterReturningBool(idParameter)) return false;
+
+        if (!isNaN(parseFloat(idParameter))) return false;
+
+        return true;
+    }
+
     static validateStringParameterReturningBool(parameter?: string | null): boolean {
         if (parameter === null || parameter === undefined || !parameter.length || typeof parameter !== 'string')
             return false;

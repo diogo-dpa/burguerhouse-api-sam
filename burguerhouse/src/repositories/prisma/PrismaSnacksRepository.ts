@@ -6,7 +6,7 @@ import { SnackUpdateModel } from '../../models/snack/SnackUpdateModel';
 import { JsonAPIQueryOptions } from '../../utils/jsonapi/typesJsonapi';
 
 export class PrismaSnacksRepository implements IPrismaSnacksRepository {
-    private defaultInclude = { snackItems: true };
+    public defaultInclude = { snackItems: true };
 
     async getAll(queryOptions?: JsonAPIQueryOptions): Promise<SnackPrismaModel[]> {
         const { sort, include } = queryOptions ?? {};

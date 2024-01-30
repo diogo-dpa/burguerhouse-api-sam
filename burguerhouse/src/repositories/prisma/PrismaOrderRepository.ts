@@ -5,7 +5,7 @@ import { OrderCreateModel } from '../../models/order/OrderCreateModel';
 import { JsonAPIQueryOptions } from '../../utils/jsonapi/typesJsonapi';
 
 export class PrismaOrderRepository implements IPrismaOrderRepository {
-    private defaultInclude = { orderItems: true };
+    public defaultInclude = { orderItems: true };
 
     async getAll(queryOptions?: JsonAPIQueryOptions): Promise<OrderPrismaModel[]> {
         const { sort, include } = queryOptions ?? {};

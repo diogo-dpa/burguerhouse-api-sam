@@ -42,8 +42,8 @@ export class OrderService implements IOrderService {
                 (item) =>
                     (ingredient &&
                         item.ingredientId &&
-                        !ErrorHandler.validateStringParameterReturningBool(item.ingredientId)) ||
-                    (snack && item.snackId && !ErrorHandler.validateStringParameterReturningBool(item.snackId)),
+                        !ErrorHandler.validateStringIdReturningBool(item.ingredientId)) ||
+                    (snack && item.snackId && !ErrorHandler.validateStringIdReturningBool(item.snackId)),
             )
         )
             throw new Error(ErrorHandler.returnBadRequestCustomError(ErrorHandler.invalidParametersMessage));
@@ -90,9 +90,10 @@ export class OrderService implements IOrderService {
         const snacks = await Promise.all([...snackPromise]);
 
         if (ingredients?.some((ingredient) => ingredient === null))
-            throw new Error(ErrorHandler.ingredientNotFoundMessage);
+            throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.ingredientNotFoundMessage));
 
-        if (snacks.some((snack) => snack === null)) throw new Error(ErrorHandler.snackNotFoundMessage);
+        if (snacks.some((snack) => snack === null))
+            throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.snackNotFoundMessage));
 
         return await this.validateAndReturnUpdatedIngredientAmount(orderItems, snacks);
     }
@@ -138,7 +139,7 @@ export class OrderService implements IOrderService {
                 (ingredient) => ingredient && ingredient?.availableAmount < ingredientsAmount[ingredient?.id ?? ''],
             )
         )
-            throw new Error(ErrorHandler.insufficientIngredientAmountMessage);
+            throw new Error(ErrorHandler.returnBadRequestCustomError(ErrorHandler.insufficientIngredientAmountMessage));
 
         const resultIngredients = usedIngredients.map((ingredient) => ({
             ...ingredient,
@@ -151,7 +152,7 @@ export class OrderService implements IOrderService {
     private async validateIfUserExists(userId: string) {
         const user = await this.userRepository.getById(userId);
 
-        if (!user) throw new Error(ErrorHandler.userNotFoundMessage);
+        if (!user) throw new Error(ErrorHandler.returnNotFoundCustomError(ErrorHandler.userNotFoundMessage));
     }
 
     private async updateIngredientStock(updatedAmountIngredients: Prisma.IngredientsUpdateInput[]) {

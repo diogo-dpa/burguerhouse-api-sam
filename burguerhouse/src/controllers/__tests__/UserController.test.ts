@@ -93,7 +93,7 @@ describe('UserController', () => {
                     body: JSON.stringify(mockWrongBodyDataPrimaryAttributesRequest),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyUserServiceCreate = jest.spyOn(userService, 'createUser');
 
@@ -109,7 +109,7 @@ describe('UserController', () => {
                     body: JSON.stringify(mockWrongBodyDataAttributeAsNull),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyUserServiceCreate = jest.spyOn(userService, 'createUser');
 
@@ -125,7 +125,7 @@ describe('UserController', () => {
                     body: JSON.stringify(mockWrongBodyDataTypeDifferent),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict();
 
                 spyUserServiceCreate = jest.spyOn(userService, 'createUser');
 
@@ -142,7 +142,7 @@ describe('UserController', () => {
                     body: JSON.stringify(mockWrongBodyDataTypeDifferent),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict();
 
                 spyUserServiceCreate = jest.spyOn(userService, 'createUser');
 
@@ -153,9 +153,9 @@ describe('UserController', () => {
             });
 
             it.each([
-                ['name', '', mockErrorResponseForbidden],
-                ['email', '', mockErrorResponseForbidden],
-                ['isEmployee', undefined, mockErrorResponseForbidden],
+                ['name', '', mockErrorResponseForbidden()],
+                ['email', '', mockErrorResponseForbidden()],
+                ['isEmployee', undefined, mockErrorResponseForbidden()],
             ])('should return the status code 403 when passing wrong %s in user data', async (key, input, expected) => {
                 const wrongData = {
                     ...mockBodyRequestCreateUserController,
@@ -249,7 +249,7 @@ describe('UserController', () => {
                     body: JSON.stringify(mockWrongBodyDataPrimaryAttributesRequest),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: { id: '' } },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyUserServiceUpdate = jest.spyOn(userService, 'updateUser');
 
@@ -265,7 +265,7 @@ describe('UserController', () => {
                     body: JSON.stringify(mockWrongBodyDataAttributeAsNull),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyUserServiceUpdate = jest.spyOn(userService, 'updateUser');
 
@@ -281,7 +281,7 @@ describe('UserController', () => {
                     body: JSON.stringify(mockWrongBodyDataTypeDifferent),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict();
 
                 spyUserServiceUpdate = jest.spyOn(userService, 'updateUser');
 
@@ -298,7 +298,7 @@ describe('UserController', () => {
                     body: JSON.stringify(mockWrongBodyDataTypeDifferent),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict();
 
                 spyUserServiceUpdate = jest.spyOn(userService, 'updateUser');
 
@@ -321,7 +321,7 @@ describe('UserController', () => {
                     body: JSON.stringify(wrongData),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseConflict();
 
                 spyUserServiceUpdate = jest.spyOn(userService, 'updateUser');
 
@@ -349,7 +349,7 @@ describe('UserController', () => {
                     body: JSON.stringify(wrongData),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyUserServiceUpdate = jest.spyOn(userService, 'updateUser');
 
@@ -375,7 +375,7 @@ describe('UserController', () => {
                     body: JSON.stringify(wrongData),
                     params: { queryParameter: mockQueryParamsRequest, pathParameter: mockPathParamsWithIdRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyUserServiceUpdate = jest.spyOn(userService, 'updateUser');
 
@@ -454,7 +454,7 @@ describe('UserController', () => {
                     header: JSON.stringify(mockHeaderRequest),
                     params: { queryParameter: { [key]: value }, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyUserServiceGetAll = jest.spyOn(userService, 'getAllUsers');
 
@@ -521,48 +521,16 @@ describe('UserController', () => {
                 expect(userResponse).toStrictEqual(expectedResponse);
             });
 
-            it('should return the status code 400 when passing the include query params', async () => {
+            it.each([
+                ['include', {}],
+                ['fields', {}],
+                ['page', {}],
+            ])('should return the status code 400 when passing the %s query params', async (key, value) => {
                 const request: ControllerOptions = {
                     header: JSON.stringify(mockHeaderRequest),
-                    params: { queryParameter: { include: {} }, pathParameter: mockPathParamsRequest },
+                    params: { queryParameter: { [key]: value }, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
-
-                spyUserServiceGetById = jest.spyOn(userService, 'getUserById');
-
-                const userResponse = await userController.getById(request);
-
-                expect(spyUserServiceGetById).toHaveBeenCalledTimes(0);
-                expect(userResponse).toStrictEqual(expectedResponse);
-            });
-
-            it('should return the status code 400 when passing the fields query params', async () => {
-                const request: ControllerOptions = {
-                    header: JSON.stringify(mockHeaderRequest),
-                    params: {
-                        queryParameter: { fields: {} as Record<string, string>[] },
-                        pathParameter: mockPathParamsRequest,
-                    },
-                };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
-
-                spyUserServiceGetById = jest.spyOn(userService, 'getUserById');
-
-                const userResponse = await userController.getById(request);
-
-                expect(spyUserServiceGetById).toHaveBeenCalledTimes(0);
-                expect(userResponse).toStrictEqual(expectedResponse);
-            });
-
-            it('should return the status code 400 when passing the page query params', async () => {
-                const request: ControllerOptions = {
-                    header: JSON.stringify(mockHeaderRequest),
-                    params: {
-                        queryParameter: { page: {} as Record<string, string>[] },
-                        pathParameter: mockPathParamsRequest,
-                    },
-                };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyUserServiceGetById = jest.spyOn(userService, 'getUserById');
 
@@ -577,7 +545,7 @@ describe('UserController', () => {
                     header: JSON.stringify(mockHeaderRequest),
                     params: { queryParameter: {}, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyUserServiceGetById = jest.spyOn(userService, 'getUserById');
 
@@ -644,66 +612,17 @@ describe('UserController', () => {
                 expect(userResponse).toStrictEqual(expectedResponse);
             });
 
-            it('should return the status code 400 when passing the include query params', async () => {
+            it.each([
+                ['include', {}],
+                ['fields', {}],
+                ['filter', {}],
+                ['page', {}],
+            ])('should return the status code 400 when passing the %s query params', async (key, value) => {
                 const request: ControllerOptions = {
                     header: JSON.stringify(mockHeaderRequest),
-                    params: { queryParameter: { include: {} }, pathParameter: mockPathParamsRequest },
+                    params: { queryParameter: { [key]: value }, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
-
-                spyUserServiceGetById = jest.spyOn(userService, 'getUserById');
-
-                const userResponse = await userController.getRelationshipById(request);
-
-                expect(spyUserServiceGetById).toHaveBeenCalledTimes(0);
-                expect(userResponse).toStrictEqual(expectedResponse);
-            });
-
-            it('should return the status code 400 when passing the fields query params', async () => {
-                const request: ControllerOptions = {
-                    header: JSON.stringify(mockHeaderRequest),
-                    params: {
-                        queryParameter: { fields: {} as Record<string, string>[] },
-                        pathParameter: mockPathParamsRequest,
-                    },
-                };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
-
-                spyUserServiceGetById = jest.spyOn(userService, 'getUserById');
-
-                const userResponse = await userController.getRelationshipById(request);
-
-                expect(spyUserServiceGetById).toHaveBeenCalledTimes(0);
-                expect(userResponse).toStrictEqual(expectedResponse);
-            });
-
-            it('should return the status code 400 when passing the filter query params', async () => {
-                const request: ControllerOptions = {
-                    header: JSON.stringify(mockHeaderRequest),
-                    params: {
-                        queryParameter: { filter: {} as Record<string, string>[] },
-                        pathParameter: mockPathParamsRequest,
-                    },
-                };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
-
-                spyUserServiceGetById = jest.spyOn(userService, 'getUserById');
-
-                const userResponse = await userController.getRelationshipById(request);
-
-                expect(spyUserServiceGetById).toHaveBeenCalledTimes(0);
-                expect(userResponse).toStrictEqual(expectedResponse);
-            });
-
-            it('should return the status code 400 when passing the page query params', async () => {
-                const request: ControllerOptions = {
-                    header: JSON.stringify(mockHeaderRequest),
-                    params: {
-                        queryParameter: { page: {} as Record<string, string>[] },
-                        pathParameter: mockPathParamsRequest,
-                    },
-                };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseBadRequest();
 
                 spyUserServiceGetById = jest.spyOn(userService, 'getUserById');
 
@@ -718,7 +637,7 @@ describe('UserController', () => {
                     header: JSON.stringify(mockHeaderRequest),
                     params: { queryParameter: {}, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyUserServiceGetById = jest.spyOn(userService, 'getUserById');
 
@@ -792,7 +711,7 @@ describe('UserController', () => {
                     header: JSON.stringify(mockHeaderRequest),
                     params: { queryParameter: {}, pathParameter: mockPathParamsRequest },
                 };
-                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden;
+                const expectedResponse: ControllerResponseJsonAPI = mockErrorResponseForbidden();
 
                 spyUserServiceDelete = jest.spyOn(userService, 'deleteUserById');
 
