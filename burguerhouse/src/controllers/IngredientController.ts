@@ -18,6 +18,11 @@ export class IngredientController implements IIngredientController {
     private ingredientService: IngredientService;
     private jsonAPIHandler: JSONAPIHandler;
     private jsonAPIRoute = 'ingredients';
+    private ingredientsRelations = [
+        JsonAPIProjectTypesEnum.snack,
+        JsonAPIProjectTypesEnum.menu,
+        JsonAPIProjectTypesEnum.order,
+    ];
 
     constructor(_ingredientService: IngredientService) {
         this.ingredientService = _ingredientService;
@@ -61,6 +66,9 @@ export class IngredientController implements IIngredientController {
                     linkSelf: `${this.jsonAPIRoute}/${ingredient.id}`,
                 },
                 body: ingredient,
+                relationships: {
+                    relations: [...this.ingredientsRelations],
+                },
                 statusCode: 201,
             });
         } catch (error: any) {
@@ -115,6 +123,9 @@ export class IngredientController implements IIngredientController {
                     linkSelf: `${this.jsonAPIRoute}/${ingredient.id}`,
                 },
                 body: ingredient,
+                relationships: {
+                    relations: [...this.ingredientsRelations],
+                },
             });
         } catch (error: any) {
             return defineErrorResponse(error.message);
@@ -136,6 +147,9 @@ export class IngredientController implements IIngredientController {
             return this.jsonAPIHandler.mountSuccessResponseArray<IngredientResponseModel>({
                 options: { type: JsonAPIProjectTypesEnum.ingredient, linkSelf: this.jsonAPIRoute },
                 body: ingredients,
+                relationships: {
+                    relations: [...this.ingredientsRelations],
+                },
             });
         } catch (error: any) {
             return defineErrorResponse(error.message);
@@ -163,6 +177,9 @@ export class IngredientController implements IIngredientController {
             return this.jsonAPIHandler.mountSuccessResponse<IngredientResponseModel>({
                 options: { type: JsonAPIProjectTypesEnum.ingredient, linkSelf: `${this.jsonAPIRoute}/${id}` },
                 body: ingredient,
+                relationships: {
+                    relations: [...this.ingredientsRelations],
+                },
             });
         } catch (error: any) {
             return defineErrorResponse(error.message);

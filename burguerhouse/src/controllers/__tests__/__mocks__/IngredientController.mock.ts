@@ -25,6 +25,26 @@ export const mockResponseCreateIngredientController: JsonAPIBodyResponse<Ingredi
             availableAmount: 10,
             unitMoneyAmount: 1,
         },
+        relationships: {
+            snack: {
+                links: {
+                    self: 'http://localhost:3000/ingredients/1/relationships/snacks',
+                    related: 'http://localhost:3000/ingredients/1/snacks',
+                },
+            },
+            menu: {
+                links: {
+                    self: 'http://localhost:3000/ingredients/1/relationships/menus',
+                    related: 'http://localhost:3000/ingredients/1/menus',
+                },
+            },
+            order: {
+                links: {
+                    self: 'http://localhost:3000/ingredients/1/relationships/orders',
+                    related: 'http://localhost:3000/ingredients/1/orders',
+                },
+            },
+        },
     },
     links: {
         self: 'http://localhost:3000/ingredients/1',
@@ -78,6 +98,26 @@ export const mockResponseUpdateIngredientController: JsonAPIBodyResponse<Ingredi
             availableAmount: 10,
             unitMoneyAmount: 1,
         },
+        relationships: {
+            snack: {
+                links: {
+                    self: 'http://localhost:3000/ingredients/1/relationships/snacks',
+                    related: 'http://localhost:3000/ingredients/1/snacks',
+                },
+            },
+            menu: {
+                links: {
+                    self: 'http://localhost:3000/ingredients/1/relationships/menus',
+                    related: 'http://localhost:3000/ingredients/1/menus',
+                },
+            },
+            order: {
+                links: {
+                    self: 'http://localhost:3000/ingredients/1/relationships/orders',
+                    related: 'http://localhost:3000/ingredients/1/orders',
+                },
+            },
+        },
     },
     links: {
         self: 'http://localhost:3000/ingredients/1',
@@ -113,6 +153,26 @@ export const mockResponseGetAllIngredientController: JsonAPIBodyResponseArray<In
                 availableAmount: 50,
                 unitMoneyAmount: 10,
             },
+            relationships: {
+                snack: {
+                    links: {
+                        self: 'http://localhost:3000/ingredients/1/relationships/snacks',
+                        related: 'http://localhost:3000/ingredients/1/snacks',
+                    },
+                },
+                menu: {
+                    links: {
+                        self: 'http://localhost:3000/ingredients/1/relationships/menus',
+                        related: 'http://localhost:3000/ingredients/1/menus',
+                    },
+                },
+                order: {
+                    links: {
+                        self: 'http://localhost:3000/ingredients/1/relationships/orders',
+                        related: 'http://localhost:3000/ingredients/1/orders',
+                    },
+                },
+            },
         },
         {
             type: 'ingredient',
@@ -121,6 +181,26 @@ export const mockResponseGetAllIngredientController: JsonAPIBodyResponseArray<In
                 name: 'Brocolis',
                 availableAmount: 10,
                 unitMoneyAmount: 1,
+            },
+            relationships: {
+                snack: {
+                    links: {
+                        self: 'http://localhost:3000/ingredients/2/relationships/snacks',
+                        related: 'http://localhost:3000/ingredients/2/snacks',
+                    },
+                },
+                menu: {
+                    links: {
+                        self: 'http://localhost:3000/ingredients/2/relationships/menus',
+                        related: 'http://localhost:3000/ingredients/2/menus',
+                    },
+                },
+                order: {
+                    links: {
+                        self: 'http://localhost:3000/ingredients/2/relationships/orders',
+                        related: 'http://localhost:3000/ingredients/2/orders',
+                    },
+                },
             },
         },
     ],
@@ -148,6 +228,26 @@ export const mockResponseGetByIdIngredientController: JsonAPIBodyResponse<Ingred
             name: 'Cenoura',
             availableAmount: 50,
             unitMoneyAmount: 10,
+        },
+        relationships: {
+            snack: {
+                links: {
+                    self: 'http://localhost:3000/ingredients/1/relationships/snacks',
+                    related: 'http://localhost:3000/ingredients/1/snacks',
+                },
+            },
+            menu: {
+                links: {
+                    self: 'http://localhost:3000/ingredients/1/relationships/menus',
+                    related: 'http://localhost:3000/ingredients/1/menus',
+                },
+            },
+            order: {
+                links: {
+                    self: 'http://localhost:3000/ingredients/1/relationships/orders',
+                    related: 'http://localhost:3000/ingredients/1/orders',
+                },
+            },
         },
     },
     links: {
