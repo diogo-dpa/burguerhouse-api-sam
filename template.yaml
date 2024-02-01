@@ -8,56 +8,81 @@ Description: >
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
+    Architectures:
+        - x86_64
+    CodeUri: burguerhouse/
+    Environment:
+        Variables:
+          DATABASE_URL: postgresql://postgres:senha123@172.23.0.2:5432/postgres?schema=public
+    Runtime: nodejs18.x
     Timeout: 3
+  Api: 
+    OpenApiVersion: '2.0'
 
 Resources:
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 20
+      DBInstanceClass: db.t3.micro
+      Engine: postgres
+      EngineVersion: 15.5
+      MasterUsername: postgres
+      MasterUserPassword: senha123
+      DBInstanceIdentifier: burguerhouse
+      PubliclyAccessible: true
+      DBName: postgres
   UsersFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    DependsOn: DBInstance
     Properties:
-      CodeUri: burguerhouse/
       Handler: app.lambdaUserHandler
-      Runtime: nodejs18.x
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
+      # Environment:
+      #   Variables:
+      #     DATABASE_URL: !Sub postgresql://postgres:senha123@${DBInstance.Endpoint.Address}:5432/postgres?schema=public
       Events:
         GetAllDataFromRelationShortSyntax:
           Type: Api
           Properties:
             Path: /users/{id}/{relation}
             Method: get
+            RestApiId: !Ref UsersApiInstance
         GetAllDataFromRelationLongSyntax:
           Type: Api
           Properties:
             Path: /users/{id}/relationships/{relation}
             Method: get
+            RestApiId: !Ref UsersApiInstance
         GetAllUsers:
           Type: Api
           Properties:
             Path: /users
             Method: get
+            RestApiId: !Ref UsersApiInstance
         GetUserById:
           Type: Api
           Properties:
             Path: /users/{id}
             Method: get
+            RestApiId: !Ref UsersApiInstance
         CreateUser:
           Type: Api
           Properties:
             Path: /users
             Method: post
+            RestApiId: !Ref UsersApiInstance
         UpdateUser:
           Type: Api
           Properties:
             Path: /users/{id}
             Method: patch
+            RestApiId: !Ref UsersApiInstance
         DeleteUser:
           Type: Api
           Properties:
             Path: /users/{id}
             Method: delete
+            RestApiId: !Ref UsersApiInstance
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -71,42 +96,41 @@ Resources:
         - .so.node=file
         AssetNames: '[name]'
   IngredientsFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
+    DependsOn: DBInstance
     Properties:
-      CodeUri: burguerhouse/
       Handler: app.lambdaIngredientHandler
-      Runtime: nodejs18.x
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
         GetAllIngredients:
           Type: Api
           Properties:
             Path: /ingredients
             Method: get
+            RestApiId: !Ref IngredientsApiInstance
         GetIngredientById:
           Type: Api
           Properties:
             Path: /ingredients/{id}
             Method: get
+            RestApiId: !Ref IngredientsApiInstance
         CreateIngredient:
           Type: Api
           Properties:
             Path: /ingredients
             Method: post
+            RestApiId: !Ref IngredientsApiInstance
         UpdateIngredient:
           Type: Api
           Properties:
             Path: /ingredients/{id}
             Method: patch
+            RestApiId: !Ref IngredientsApiInstance
         DeleteIngredient:
           Type: Api
           Properties:
             Path: /ingredients/{id}
             Method: delete
+            RestApiId: !Ref IngredientsApiInstance
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -121,51 +145,52 @@ Resources:
         AssetNames: '[name]'
   SnacksFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    DependsOn: DBInstance
     Properties:
-      CodeUri: burguerhouse/
       Handler: app.lambdaSnackHandler
-      Runtime: nodejs18.x
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
         GetAllDataFromRelationShortSyntax:
           Type: Api
           Properties:
             Path: /snacks/{id}/{relation}
             Method: get
+            RestApiId: !Ref SnacksApiInstance
         GetAllDataFromRelationLongSyntax:
           Type: Api
           Properties:
             Path: /snacks/{id}/relationships/{relation}
             Method: get
+            RestApiId: !Ref SnacksApiInstance
         GetAllSnacks:
           Type: Api
           Properties:
             Path: /snacks
             Method: get
+            RestApiId: !Ref SnacksApiInstance
         GetSnackById:
           Type: Api
           Properties:
             Path: /snacks/{id}
             Method: get
+            RestApiId: !Ref SnacksApiInstance
         CreateSnack:
           Type: Api
           Properties:
             Path: /snacks
             Method: post
+            RestApiId: !Ref SnacksApiInstance
         UpdateSnack:
           Type: Api
           Properties:
             Path: /snacks/{id}
             Method: patch
+            RestApiId: !Ref SnacksApiInstance
         DeleteSnack:
           Type: Api
           Properties:
             Path: /snacks/{id}
             Method: delete
+            RestApiId: !Ref SnacksApiInstance
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -180,51 +205,52 @@ Resources:
         AssetNames: '[name]'
   MenusFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    DependsOn: DBInstance
     Properties:
-      CodeUri: burguerhouse/
       Handler: app.lambdaMenuHandler
-      Runtime: nodejs18.x
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
         GetAllDataFromRelationShortSyntax:
           Type: Api
           Properties:
             Path: /menus/{id}/{relation}
             Method: get
+            RestApiId: !Ref MenusApiInstance
         GetAllDataFromRelationLongSyntax:
           Type: Api
           Properties:
             Path: /menus/{id}/relationships/{relation}
             Method: get
+            RestApiId: !Ref MenusApiInstance
         GetAllMenus:
           Type: Api
           Properties:
             Path: /menus
             Method: get
+            RestApiId: !Ref MenusApiInstance
         GetMenuById:
           Type: Api
           Properties:
             Path: /menus/{id}
             Method: get
+            RestApiId: !Ref MenusApiInstance
         CreateMenu:
           Type: Api
           Properties:
             Path: /menus
             Method: post
+            RestApiId: !Ref MenusApiInstance
         UpdateMenu:
           Type: Api
           Properties:
             Path: /menus/{id}
             Method: patch
+            RestApiId: !Ref MenusApiInstance
         DeleteMenu:
           Type: Api
           Properties:
             Path: /menus/{id}
             Method: delete
+            RestApiId: !Ref MenusApiInstance
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -239,46 +265,46 @@ Resources:
         AssetNames: '[name]'
   OrdersFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    DependsOn: DBInstance
     Properties:
-      CodeUri: burguerhouse/
       Handler: app.lambdaOrderHandler
-      Runtime: nodejs18.x
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
       Events:
         GetAllDataFromRelationShortSyntax:
           Type: Api
           Properties:
             Path: /orders/{id}/{relation}
             Method: get
+            RestApiId: !Ref OrdersApiInstance
         GetAllDataFromRelationLongSyntax:
           Type: Api
           Properties:
             Path: /orders/{id}/relationships/{relation}
             Method: get
+            RestApiId: !Ref OrdersApiInstance
         GetAllOrder:
           Type: Api
           Properties:
             Path: /orders
             Method: get
+            RestApiId: !Ref OrdersApiInstance
         GetOrderById:
           Type: Api
           Properties:
             Path: /orders/{id}
             Method: get
+            RestApiId: !Ref OrdersApiInstance
         CreateOrder:
           Type: Api
           Properties:
             Path: /orders
             Method: post
+            RestApiId: !Ref OrdersApiInstance
         DeleteOrder:
           Type: Api 
           Properties:
             Path: /orders/{id}
             Method: delete
+            RestApiId: !Ref OrdersApiInstance
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -291,17 +317,98 @@ Resources:
         - .prisma=file
         - .so.node=file
         AssetNames: '[name]'
+  UsersApiInstance:
+    Type: AWS::Serverless::Api
+    DependsOn: UsersFunction
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: ./burguerhouse/swagger/swagger.user.yaml
+            OpenApiVersion: '2.0'
+  IngredientsApiInstance:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: ./burguerhouse/swagger/swagger.ingredient.yaml
+            OpenApiVersion: '2.0'
+  SnacksApiInstance:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: ./burguerhouse/swagger/swagger.snack.yaml
+            OpenApiVersion: '2.0'
+  MenusApiInstance:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: ./burguerhouse/swagger/swagger.menu.yaml
+            OpenApiVersion: '2.0'
+  OrdersApiInstance:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: ./burguerhouse/swagger/swagger.order.yaml
+            OpenApiVersion: '2.0'
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+  BurguerHouseUserEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage for User function"
+    Value: !Sub "https://${UsersApiInstance}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  BurguerHouseIngredientEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage for Ingredient function"
+    Value: !Sub "https://${IngredientsApiInstance}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  BurguerHouseSnackEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage for Snack function"
+    Value: !Sub "https://${SnacksApiInstance}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  BurguerHouseMenuEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage for Menu function"
+    Value: !Sub "https://${MenusApiInstance}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  BurguerHouseOrderEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage for Order function"
+    Value: !Sub "https://${OrdersApiInstance}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  DBInstanceIdentifier:
+    Description: "The identifier of the RDS instance"
+    Value: !Ref DBInstance
+  DBInstanceEndpoint:
+    Description: "The connection endpoint for the RDS instance"
+    Value: !GetAtt DBInstance.Endpoint.Address
+  DBInstancePort:
+    Description: "The port of the RDS instance"
+    Value: !GetAtt DBInstance.Endpoint.Port
+  BurguerHouseUsersFunction:
+    Description: "Users Lambda Function ARN"
+    Value: !GetAtt UsersFunction.Arn
+  BurguerHouseIngredientsFunction:
+    Description: "Ingredients Lambda Function ARN"
+    Value: !GetAtt IngredientsFunction.Arn
+  BurguerHouseSnacksFunction:
+    Description: "Snacks Lambda Function ARN"
+    Value: !GetAtt SnacksFunction.Arn
+  BurguerHouseMenusFunction:
+    Description: "Menus Lambda Function ARN"
+    Value: !GetAtt MenusFunction.Arn
+  BurguerHouseOrdersFunction:
+    Description: "Orders Lambda Function ARN"
+    Value: !GetAtt OrdersFunction.Arn

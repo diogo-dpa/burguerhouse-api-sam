@@ -1,0 +1,135 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: Ingredient API
+  description: Teste de API
+paths:
+  /ingredients/{id}:
+    get:
+      summary: Get a ingredient by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${IngredientsFunction.Arn}/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+    put:
+      summary: Update a ingredient
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+        - in: body
+          name: ingredient
+          required: true
+          schema:
+            $ref: '#/definitions/Ingredient'
+      responses:
+        '200':
+          description: Successful response
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${IngredientsFunction.Arn}/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+    delete:
+      summary: Delete a ingredient
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${IngredientsFunction.Arn}/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+  /ingredients/{id}/relationships/{relation}:
+    get:
+      summary: Get all relation registers from a ingredient
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${IngredientsFunction.Arn}/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+  /ingredients/{id}/{relation}:
+    get:
+      summary: Get all relation registers from a ingredient
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${IngredientsFunction.Arn}/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+  /ingredients:
+    post:
+      summary: Create a ingredient
+      parameters:
+        - in: body
+          name: ingredient
+          required: true
+          schema:
+            $ref: '#/definitions/Ingredient'
+      responses:
+        '201':
+          description: Successful response
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${IngredientsFunction.Arn}/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+    get:
+      summary: Get all ingredients
+      responses:
+        '200':
+          description: Successful response
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${IngredientsFunction.Arn}/invocations
+        passthroughBehavior: when_no_match
+        httpMethod: POST
+        type: aws_proxy
+definitions:
+  Ingredient:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      unitMoneyAmount:
+        type: number
+      availableAmount:
+        type: integer
