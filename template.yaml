@@ -13,11 +13,11 @@ Globals:
     CodeUri: burguerhouse/
     Environment:
         Variables:
-          DATABASE_URL: postgresql://postgres:senha123@172.23.0.2:5432/postgres?schema=public
+          DATABASE_URL: postgresql://postgres:senha123@172.23.0.3:5432/postgres?schema=public
     Runtime: nodejs18.x
     Timeout: 3
   Api: 
-    OpenApiVersion: '2.0'
+    OpenApiVersion: '3.0.0'
 
 Resources:
   DBInstance:
@@ -37,52 +37,49 @@ Resources:
     DependsOn: DBInstance
     Properties:
       Handler: app.lambdaUserHandler
-      # Environment:
-      #   Variables:
-      #     DATABASE_URL: !Sub postgresql://postgres:senha123@${DBInstance.Endpoint.Address}:5432/postgres?schema=public
       Events:
         GetAllDataFromRelationShortSyntax:
           Type: Api
           Properties:
             Path: /users/{id}/{relation}
             Method: get
-            RestApiId: !Ref UsersApiInstance
+            # RestApiId: !Ref UsersApiInstance
         GetAllDataFromRelationLongSyntax:
           Type: Api
           Properties:
             Path: /users/{id}/relationships/{relation}
             Method: get
-            RestApiId: !Ref UsersApiInstance
+            # RestApiId: !Ref UsersApiInstance
         GetAllUsers:
           Type: Api
           Properties:
             Path: /users
             Method: get
-            RestApiId: !Ref UsersApiInstance
+            # RestApiId: !Ref UsersApiInstance
         GetUserById:
           Type: Api
           Properties:
             Path: /users/{id}
             Method: get
-            RestApiId: !Ref UsersApiInstance
+            # RestApiId: !Ref UsersApiInstance
         CreateUser:
           Type: Api
           Properties:
             Path: /users
             Method: post
-            RestApiId: !Ref UsersApiInstance
+            # RestApiId: !Ref UsersApiInstance
         UpdateUser:
           Type: Api
           Properties:
             Path: /users/{id}
             Method: patch
-            RestApiId: !Ref UsersApiInstance
+            # RestApiId: !Ref UsersApiInstance
         DeleteUser:
           Type: Api
           Properties:
             Path: /users/{id}
             Method: delete
-            RestApiId: !Ref UsersApiInstance
+            # RestApiId: !Ref UsersApiInstance
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -106,31 +103,31 @@ Resources:
           Properties:
             Path: /ingredients
             Method: get
-            RestApiId: !Ref IngredientsApiInstance
+            # RestApiId: !Ref IngredientsApiInstance
         GetIngredientById:
           Type: Api
           Properties:
             Path: /ingredients/{id}
             Method: get
-            RestApiId: !Ref IngredientsApiInstance
+            # RestApiId: !Ref IngredientsApiInstance
         CreateIngredient:
           Type: Api
           Properties:
             Path: /ingredients
             Method: post
-            RestApiId: !Ref IngredientsApiInstance
+            # RestApiId: !Ref IngredientsApiInstance
         UpdateIngredient:
           Type: Api
           Properties:
             Path: /ingredients/{id}
             Method: patch
-            RestApiId: !Ref IngredientsApiInstance
+            # RestApiId: !Ref IngredientsApiInstance
         DeleteIngredient:
           Type: Api
           Properties:
             Path: /ingredients/{id}
             Method: delete
-            RestApiId: !Ref IngredientsApiInstance
+            # RestApiId: !Ref IngredientsApiInstance
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -154,43 +151,43 @@ Resources:
           Properties:
             Path: /snacks/{id}/{relation}
             Method: get
-            RestApiId: !Ref SnacksApiInstance
+            # RestApiId: !Ref SnacksApiInstance
         GetAllDataFromRelationLongSyntax:
           Type: Api
           Properties:
             Path: /snacks/{id}/relationships/{relation}
             Method: get
-            RestApiId: !Ref SnacksApiInstance
+            # RestApiId: !Ref SnacksApiInstance
         GetAllSnacks:
           Type: Api
           Properties:
             Path: /snacks
             Method: get
-            RestApiId: !Ref SnacksApiInstance
+            # RestApiId: !Ref SnacksApiInstance
         GetSnackById:
           Type: Api
           Properties:
             Path: /snacks/{id}
             Method: get
-            RestApiId: !Ref SnacksApiInstance
+            # RestApiId: !Ref SnacksApiInstance
         CreateSnack:
           Type: Api
           Properties:
             Path: /snacks
             Method: post
-            RestApiId: !Ref SnacksApiInstance
+            # RestApiId: !Ref SnacksApiInstance
         UpdateSnack:
           Type: Api
           Properties:
             Path: /snacks/{id}
             Method: patch
-            RestApiId: !Ref SnacksApiInstance
+            # RestApiId: !Ref SnacksApiInstance
         DeleteSnack:
           Type: Api
           Properties:
             Path: /snacks/{id}
             Method: delete
-            RestApiId: !Ref SnacksApiInstance
+            # RestApiId: !Ref SnacksApiInstance
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -214,43 +211,43 @@ Resources:
           Properties:
             Path: /menus/{id}/{relation}
             Method: get
-            RestApiId: !Ref MenusApiInstance
+            # RestApiId: !Ref MenusApiInstance
         GetAllDataFromRelationLongSyntax:
           Type: Api
           Properties:
             Path: /menus/{id}/relationships/{relation}
             Method: get
-            RestApiId: !Ref MenusApiInstance
+            # RestApiId: !Ref MenusApiInstance
         GetAllMenus:
           Type: Api
           Properties:
             Path: /menus
             Method: get
-            RestApiId: !Ref MenusApiInstance
+            # RestApiId: !Ref MenusApiInstance
         GetMenuById:
           Type: Api
           Properties:
             Path: /menus/{id}
             Method: get
-            RestApiId: !Ref MenusApiInstance
+            # RestApiId: !Ref MenusApiInstance
         CreateMenu:
           Type: Api
           Properties:
             Path: /menus
             Method: post
-            RestApiId: !Ref MenusApiInstance
+            # RestApiId: !Ref MenusApiInstance
         UpdateMenu:
           Type: Api
           Properties:
             Path: /menus/{id}
             Method: patch
-            RestApiId: !Ref MenusApiInstance
+            # RestApiId: !Ref MenusApiInstance
         DeleteMenu:
           Type: Api
           Properties:
             Path: /menus/{id}
             Method: delete
-            RestApiId: !Ref MenusApiInstance
+            # RestApiId: !Ref MenusApiInstance
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -274,37 +271,37 @@ Resources:
           Properties:
             Path: /orders/{id}/{relation}
             Method: get
-            RestApiId: !Ref OrdersApiInstance
+            # RestApiId: !Ref OrdersApiInstance
         GetAllDataFromRelationLongSyntax:
           Type: Api
           Properties:
             Path: /orders/{id}/relationships/{relation}
             Method: get
-            RestApiId: !Ref OrdersApiInstance
+            # RestApiId: !Ref OrdersApiInstance
         GetAllOrder:
           Type: Api
           Properties:
             Path: /orders
             Method: get
-            RestApiId: !Ref OrdersApiInstance
+            # RestApiId: !Ref OrdersApiInstance
         GetOrderById:
           Type: Api
           Properties:
             Path: /orders/{id}
             Method: get
-            RestApiId: !Ref OrdersApiInstance
+            # RestApiId: !Ref OrdersApiInstance
         CreateOrder:
           Type: Api
           Properties:
             Path: /orders
             Method: post
-            RestApiId: !Ref OrdersApiInstance
+            # RestApiId: !Ref OrdersApiInstance
         DeleteOrder:
           Type: Api 
           Properties:
             Path: /orders/{id}
             Method: delete
-            RestApiId: !Ref OrdersApiInstance
+            # RestApiId: !Ref OrdersApiInstance
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -317,57 +314,57 @@ Resources:
         - .prisma=file
         - .so.node=file
         AssetNames: '[name]'
-  UsersApiInstance:
-    Type: AWS::Serverless::Api
-    DependsOn: UsersFunction
-    Properties:
-      StageName: Prod
-      DefinitionBody:
-        Fn::Transform:
-          Name: AWS::Include
-          Parameters:
-            Location: ./burguerhouse/swagger/swagger.user.yaml
-            OpenApiVersion: '2.0'
-  IngredientsApiInstance:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: Prod
-      DefinitionBody:
-        Fn::Transform:
-          Name: AWS::Include
-          Parameters:
-            Location: ./burguerhouse/swagger/swagger.ingredient.yaml
-            OpenApiVersion: '2.0'
-  SnacksApiInstance:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: Prod
-      DefinitionBody:
-        Fn::Transform:
-          Name: AWS::Include
-          Parameters:
-            Location: ./burguerhouse/swagger/swagger.snack.yaml
-            OpenApiVersion: '2.0'
-  MenusApiInstance:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: Prod
-      DefinitionBody:
-        Fn::Transform:
-          Name: AWS::Include
-          Parameters:
-            Location: ./burguerhouse/swagger/swagger.menu.yaml
-            OpenApiVersion: '2.0'
-  OrdersApiInstance:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: Prod
-      DefinitionBody:
-        Fn::Transform:
-          Name: AWS::Include
-          Parameters:
-            Location: ./burguerhouse/swagger/swagger.order.yaml
-            OpenApiVersion: '2.0'
+  # UsersApiInstance:
+  #   Type: AWS::Serverless::Api
+  #   DependsOn: UsersFunction
+  #   Properties:
+  #     StageName: Prod
+  #     DefinitionBody:
+  #       Fn::Transform:
+  #         Name: AWS::Include
+  #         Parameters:
+  #           Location: ./burguerhouse/swagger/swagger.user.yaml
+  #       OpenApiVersion: '3.0.0'
+  # IngredientsApiInstance:
+  #   Type: AWS::Serverless::Api
+  #   Properties:
+  #     StageName: Prod
+  #     DefinitionBody:
+  #       Fn::Transform:
+  #         Name: AWS::Include
+  #         Parameters:
+  #           Location: ./burguerhouse/swagger/swagger.ingredient.yaml
+  #       OpenApiVersion: '3.0.0'
+  # SnacksApiInstance:
+  #   Type: AWS::Serverless::Api
+  #   Properties:
+  #     StageName: Prod
+  #     DefinitionBody:
+  #       Fn::Transform:
+  #         Name: AWS::Include
+  #         Parameters:
+  #           Location: ./burguerhouse/swagger/swagger.snack.yaml
+  #       OpenApiVersion: '3.0.0'
+  # MenusApiInstance:
+  #   Type: AWS::Serverless::Api
+  #   Properties:
+  #     StageName: Prod
+  #     DefinitionBody:
+  #       Fn::Transform:
+  #         Name: AWS::Include
+  #         Parameters:
+  #           Location: ./burguerhouse/swagger/swagger.menu.yaml
+  #       OpenApiVersion: '3.0.0'
+  # OrdersApiInstance:
+    # Type: AWS::Serverless::Api
+    # Properties:
+    #   StageName: Prod
+    #   DefinitionBody:
+    #     Fn::Transform:
+    #       Name: AWS::Include
+    #       Parameters:
+    #         Location: ./burguerhouse/swagger/swagger.order.yaml
+    #     OpenApiVersion: '3.0.0'
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

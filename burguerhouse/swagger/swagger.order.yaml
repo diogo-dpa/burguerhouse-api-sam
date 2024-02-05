@@ -1,114 +1,295 @@
-swagger: '2.0'
+openapi: 3.0.0
 info:
   version: '1.0'
   title: Order API
-  description: Teste de API
+  description: API destinated to order management
+
 paths:
   /orders/{id}:
     get:
-      summary: Get a order by ID
+      tags:
+          - Orders
+      summary: Get an order by ID
       parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/vnd.api+json
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OrdersFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
     delete:
+      tags:
+          - Orders
       summary: Delete a order
       parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/vnd.api+json
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OrdersFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
   /orders/{id}/relationships/{relation}:
     get:
-      summary: Get all relation registers from a order
+      tags:
+          - Orders
+      summary: Get all relation registers of a specific order
       parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/vnd.api+json
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
+        - in: path
+          name: relation
+          required: true
+          schema:
+            type: string
+            enum:
+              - ingredients
+              - snacks
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OrdersFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
   /orders/{id}/{relation}:
     get:
-      summary: Get all relation registers from a order
+      tags:
+          - Orders
+      summary: Get all relation registers of a specific order
       parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/vnd.api+json
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
+        - in: path
+          name: relation
+          required: true
+          schema:
+            type: string
+            enum:
+              - ingredients
+              - snacks
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OrdersFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
   /orders:
     post:
+      tags:
+          - Orders
       summary: Create a order
-      parameters:
-        - in: body
-          name: order
-          required: true
-          schema:
-            $ref: '#/definitions/Order'
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Order'
+            example:
+              data:
+                type: order
+                attributes:
+                  userId: some-user-id
+                  totalPrice: 53.9
+                  orderItems:
+                    - snackId: null
+                      itemAmount: 4
+                      ingredientId: some-ingredient-id
+                    - snackId: some-snack-id
+                      itemAmount: 10
+                      ingredientId: null
       responses:
         '201':
           description: Successful response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Order'
+              examples:
+                Example:
+                  value:
+                    data:
+                      type: order
+                      id: some-order-id
+                      attributes:
+                        orderDate: 2021-10-10
+                        userId: some-user-id
+                        totalPrice: 53.9
+                        orderItems:
+                          - id: some-id
+                            snackId: null
+                            itemAmount: 4
+                            ingredientId: some-ingredient-id
+                          - id: some-id-2
+                            snackId: some-snack-id
+                            itemAmount: 10
+                            ingredientId: null
+                          
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OrdersFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
     get:
+      tags:
+          - Orders
       summary: Get all orders
+      parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/vnd.api+json
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${OrdersFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
-definitions:
-  Order:
-    type: object
-    properties:
-      id:
-        type: string
-      userId:
-        type: string
-      totalPrice:
-        type: number
-      orderDate:
-        type: string
+
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        totalPrice:
+          type: number
+        orderDate:
+          type: string
+        orderItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItems'
+      required:
+        - id
+        - userId
+        - totalPrice
+        - orderItems
+    OrderItems:
+      type: object
+      properties:
+        id:
+          type: string
+        snackId:
+          type: string
+        ingredientId:
+          type: string
+        itemAmount:
+          type: integer
+      required:
+        - id
+        - snackId
+        - ingredientId
+        - itemAmount

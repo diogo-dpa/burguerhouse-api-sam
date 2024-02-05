@@ -1,135 +1,324 @@
-swagger: '2.0'
+openapi: 3.0.0
 info:
   version: '1.0'
   title: Snack API
-  description: Teste de API
+  description: API destinated to snack management
+
 paths:
   /snacks/{id}:
     get:
+      tags:
+          - Snacks
       summary: Get a snack by ID
       parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/vnd.api+json
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SnacksFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
-    put:
+    patch:
+      tags:
+            - Snacks
       summary: Update a snack
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Snack'
       parameters:
         - in: path
           name: id
           required: true
-          type: string
-        - in: body
-          name: snack
-          required: true
           schema:
-            $ref: '#/definitions/Snack'
+            type: string
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SnacksFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
     delete:
+      tags:
+          - Snacks
       summary: Delete a snack
       parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/vnd.api+json
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SnacksFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
   /snacks/{id}/relationships/{relation}:
     get:
-      summary: Get all relation registers from a snack
+      tags:
+          - Snacks
+      summary: Get all relation registers of a specific snack
       parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/vnd.api+json
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
+        - in: path
+          name: relation
+          required: true
+          schema:
+            type: string
+            enum:
+              - ingredients
+              - menus
+              - orders
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SnacksFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
   /snacks/{id}/{relation}:
     get:
-      summary: Get all relation registers from a snack
+      tags:
+          - Snacks
+      summary: Get all relation registers of a specific snack
       parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/vnd.api+json
         - in: path
           name: id
           required: true
-          type: string
+          schema:
+            type: string
+        - in: path
+          name: relation
+          required: true
+          schema:
+            type: string
+            enum:
+              - ingredients
+              - menus
+              - orders
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SnacksFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
   /snacks:
     post:
+      tags:
+          - Snacks
       summary: Create a snack
-      parameters:
-        - in: body
-          name: snack
-          required: true
-          schema:
-            $ref: '#/definitions/Snack'
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/Snack'
+            example:
+              data:
+                type: snack
+                attributes:
+                  name: File parmegiana
+                  description: Prato saboroso
+                  snackItems:
+                    - ingredientAmount: 2
+                      ingredientId: some-ingredient-id
+                    - ingredientAmount: 2
+                      ingredientId: some-ingredient-id-2
       responses:
         '201':
           description: Successful response
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/Snack'
+              examples:
+                Example:
+                  value:
+                    data:
+                      type: snack
+                      id: some-id
+                      attributes:
+                        name: File parmegiana
+                        description: Prato saboroso
+                        unitMoneyAmount: 54
+                        snackItems:
+                          - id: some-id
+                            ingredientAmount: 2
+                            ingredientId: some-ingredient-id
+                          - id: some-id-2
+                            ingredientAmount: 2
+                            ingredientId: some-ingredient-id-2
+                          
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SnacksFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
     get:
+      tags:
+          - Snacks
       summary: Get all snacks
+      parameters:
+        - in: header
+          name: Content-Type
+          required: true
+          schema:
+            type: string
+            enum:
+              - application/vnd.api+json
       responses:
         '200':
           description: Successful response
+        '415':
+          description: Unsuported media type error
+        '409':
+          description: Conflict error
+        '403':
+          description: Forbidden error
+        '400':
+          description: Bad Request error
       x-amazon-apigateway-integration:
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SnacksFunction.Arn}/invocations
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UsersFunction.Arn}/invocations
         passthroughBehavior: when_no_match
         httpMethod: POST
         type: aws_proxy
-definitions:
-  Snack:
-    type: object
-    properties:
-      id:
-        type: string
-      name:
-        type: string
-      description:
-        type: string
-      unitMoneyAmount:
-        type: number
+
+components:
+  schemas:
+    Snack:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        unitMoneyAmount:
+          type: number
+        userItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/SnackItems'
+      required:
+        - id
+        - name
+        - description
+        - unitMoneyAmount
+        - snackItems
+    SnackItems:
+      type: object
+      properties:
+        id:
+          type: string
+        ingredientAmount:
+          type: integer
+        ingredientId:
+          type: string
+      required:
+        - id
+        - ingredientAmount
+        - ingredientId
