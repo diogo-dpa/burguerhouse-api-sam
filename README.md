@@ -49,4 +49,13 @@ sam local start-api --docker-network burguerhouse
 
 Important to mention is **burguerhouse** is the name of the network created in the docker compose file for the project.
 
-
+## 🔝 Improvements to be made
+- Automation tests (handler, controller, service) for 
+  - Snack flows 
+  - Menu flows 
+- Implement other features from JSON API, like the query parameters:
+  - include
+  - page 
+  - filter 
+  - fields
+- Deploy in AWS with success
