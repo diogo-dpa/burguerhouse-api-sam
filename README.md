@@ -4,15 +4,15 @@
 This project aims to know what is AWS SAM and how to use it in a real project. The goal is to develop an API and to understand how to use it for local development and how to deploy it into production.
 
 ## ✌️ The project
-This project is about building an API for a burguer restaurant, which it would be possible to do the following features:
+This project is about building an API for a burger restaurant, which it would be possible to do the following features:
 - Register ingredients ahd their amount to represent the stock
-- Register snacks and it should be possiblee to show the ingredient amount used in each snack
+- Register snacks and it should be possible to show the ingredient amount used in each snack
 - Remove snack from the menu
 - Create orders
   - When the user ask a snack, the ingredient amount should be removed from the stock amount and, because of that, it should validate if it is possible to continue the order, accordingly the available ingredients in the stock
 
 
-## ⚙️ Techlogies used
+## ⚙️ Technologies used
 
 * [Docker](https://docs.docker.com/)
 * [Docker Compose](https://docs.docker.com/engine/reference/commandline/compose/)
